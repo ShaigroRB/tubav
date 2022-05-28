@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" height="531.5px" width="460.6px" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1.0, 0.0, 0.0, 1.0, 193.65, 334.05)">
+    <use height="90.5" transform="matrix(0.4557, 0.0, 0.0, 0.4557, 16.8221, -42.7279)" width="80.35" xlink:href="#sprite0"/>
+  </g>
+  <defs>
+    <g id="sprite0" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.5, 0.5)">
+      <use height="90.5" transform="matrix(1.0, 0.0, 0.0, 1.0, -0.5, -0.5)" width="80.35" xlink:href="#shape0"/>
+      <use height="89.5" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" width="79.35" xlink:href="#sprite1"/>
+    </g>
+    <g id="shape0" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.5, 0.5)">
+      <path d="M39.6 0.0 Q53.9 23.05 69.7 39.7 79.3 49.25 79.35 57.7 78.65 78.95 55.15 78.95 45.8 77.3 41.75 67.45 40.5 80.85 49.8 87.1 L49.5 89.5 Q44.9 87.7 39.95 87.45 L39.45 87.45 Q34.45 87.7 29.85 89.5 L29.6 87.1 Q38.85 80.85 37.65 67.45 33.6 77.3 24.25 78.95 0.7 78.95 0.0 57.7 0.1 49.25 9.65 39.7 25.5 23.05 39.6 0.0" fill="#1a1a1a" fill-rule="evenodd" stroke="none"/>
+      <path d="M39.6 0.0 Q53.9 23.05 69.7 39.7 79.3 49.25 79.35 57.7 78.65 78.95 55.15 78.95 45.8 77.3 41.75 67.45 40.5 80.85 49.8 87.1 L49.5 89.5 Q44.9 87.7 39.95 87.45 L39.45 87.45 Q34.45 87.7 29.85 89.5 L29.6 87.1 Q38.85 80.85 37.65 67.45 33.6 77.3 24.25 78.95 0.7 78.95 0.0 57.7 0.1 49.25 9.65 39.7 25.5 23.05 39.6 0.0 Z" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.6627451" stroke-width="1.0"/>
+    </g>
+    <g id="sprite1" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)">
+      <use height="89.5" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" width="79.35" xlink:href="#shape1"/>
+    </g>
+    <g id="shape1" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)">
+      <path d="M39.6 0.0 Q53.9 23.05 69.7 39.7 79.3 49.25 79.35 57.7 78.65 78.95 55.15 78.95 45.8 77.3 41.75 67.45 40.5 80.85 49.8 87.1 L49.5 89.5 Q44.9 87.7 39.95 87.45 L39.45 87.45 Q34.45 87.7 29.85 89.5 L29.6 87.1 Q38.85 80.85 37.65 67.45 33.6 77.3 24.25 78.95 0.7 78.95 0.0 57.7 0.1 49.25 9.65 39.7 25.5 23.05 39.6 0.0" fill="url(#gradient0)" fill-rule="evenodd" stroke="none"/>
+    </g>
+    <linearGradient gradientTransform="matrix(-0.034, -0.0736, 0.0495, -0.0229, 39.65, 44.75)" gradientUnits="userSpaceOnUse" id="gradient0" spreadMethod="pad" x1="-819.2" x2="819.2">
+      <stop offset="0.0" stop-color="#000000"/>
+      <stop offset="1.0" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+</svg>
