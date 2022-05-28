@@ -1,9 +1,6 @@
 import {
-  Box,
-  Center,
   ColorScheme,
   ColorSchemeProvider,
-  Divider,
   Group,
   MantineProvider,
   Stack,
@@ -11,7 +8,11 @@ import {
 import { useState } from 'react'
 import { Avatar, Footer, Layers } from './sections'
 import { Layer } from './sections/Layer'
+import { TubavContextProvider } from './TubavContext'
 
+/**
+ * Set the providers and the layout between the avatar and the layers.
+ */
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('dark')
   const toggleColorScheme = (value?: ColorScheme) =>
@@ -27,21 +28,23 @@ function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <Stack spacing="md" justify="center" style={{ padding: '1.5rem' }}>
-          <Stack justify="center">
-            <Avatar />
+        <TubavContextProvider>
+          <Stack spacing="md" justify="center" style={{ padding: '1.5rem' }}>
+            <Stack justify="center">
+              <Avatar />
+            </Stack>
+
+            <Group spacing="sm" grow>
+              <Layers />
+
+              <Layer />
+            </Group>
+
+            <Stack style={{ height: '1.75rem' }}>
+              <Footer />
+            </Stack>
           </Stack>
-
-          <Group spacing="sm" grow>
-            <Layers />
-
-            <Layer />
-          </Group>
-
-          <Stack style={{ height: '1.75rem' }}>
-            <Footer />
-          </Stack>
-        </Stack>
+        </TubavContextProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   )

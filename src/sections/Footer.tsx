@@ -11,6 +11,9 @@ import {
 import React from 'react'
 import { BrandGithub, Moon, Sun } from 'tabler-icons-react'
 
+/**
+ * Displays a link to the Github repository, a button to switch themes and copyright.
+ */
 export const Footer: React.FC = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const dark = colorScheme === 'dark'
