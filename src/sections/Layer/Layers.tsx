@@ -1,6 +1,13 @@
 import { ActionIcon, Button, Group, Stack, Text } from '@mantine/core'
 import React, { useContext } from 'react'
-import { ArrowsShuffle, Eye, EyeOff, Plus, Trash } from 'tabler-icons-react'
+import {
+  ArrowsShuffle,
+  Eye,
+  EyeOff,
+  Plus,
+  Refresh,
+  Trash,
+} from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
 import { getThemeColors } from '../../utils/colors'
@@ -56,6 +63,7 @@ export const Layers: React.FC = () => {
     setSelectedLayer,
     randomizeLayers,
     addLayer,
+    resetLayers,
   } = useContext(TubavContext)
 
   return (
@@ -92,6 +100,13 @@ export const Layers: React.FC = () => {
             onClick={randomizeLayers}
           >
             Randomize layers
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<Refresh />}
+            onClick={resetLayers}
+          >
+            Reset layers
           </Button>
         </Stack>
       </Paper>

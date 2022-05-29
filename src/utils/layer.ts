@@ -23,13 +23,21 @@ export const getFilepathForLayer = (layer: Layer) =>
 const random = (length: number): number => Math.floor(Math.random() * length)
 
 /**
+ * Get random equipment id for a category.
+ */
+const getRandomEquipmentId = (category: Equipment) => {
+  const equipments = EQUIPMENT_IDS[category]
+  const equipment_id = equipments[random(equipments.length)]
+  return equipment_id
+}
+
+/**
  * Get random equipment.
  * isWeapon determines if equipment is always a weapon.
  */
 const getRandomEquipment = (_category?: Equipment) => {
   const category = _category ? _category : Equipments[random(Equipments.length)]
-  const equipments = EQUIPMENT_IDS[category]
-  const equipment_id = equipments[random(equipments.length)]
+  const equipment_id = getRandomEquipmentId(category)
   return { equipment_id, category }
 }
 
@@ -65,6 +73,21 @@ export const createRandomLayer = (depth: number): Layer => {
  */
 export const createEmptyLayer = (depth: number): Layer =>
   createLayer('empty', -1, depth)
+
+/**
+ * Default layers.
+ */
+export const getDefaultLayers = (): Layer[] => {
+  let depth = 0
+  const layers: Layer[] = [
+    createLayer('body', -1, depth++),
+    createLayer('accessory', getRandomEquipmentId('accessory'), depth++),
+    createLayer('hat', getRandomEquipmentId('hat'), depth++),
+    createLayer('weapon', getRandomEquipmentId('weapon'), depth++),
+    createLayer('empty', -1, depth++),
+  ]
+  return layers
+}
 
 /**
  * Get randomized layers.

@@ -9,6 +9,7 @@ import {
 import {
   createEmptyLayer,
   createRandomLayer,
+  getDefaultLayers,
   getFilepathForLayer,
   getRandomizedLayers,
 } from './utils/layer'
@@ -23,6 +24,7 @@ interface ITubavContext {
   setLayerDetails: (layer: Layer) => void
   randomizeLayers: () => void
   addLayer: () => void
+  resetLayers: () => void
 }
 
 const defaultState: ITubavContext = {
@@ -34,6 +36,7 @@ const defaultState: ITubavContext = {
   setLayerDetails: noop,
   randomizeLayers: noop,
   addLayer: noop,
+  resetLayers: noop,
 }
 
 /**
@@ -90,6 +93,11 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
     setLayers([...layersWithoutEmpty, newLayer, emptyLayer])
   }
 
+  const resetLayers = () => {
+    const defaultLayers = getDefaultLayers()
+    setLayers([...defaultLayers])
+  }
+
   const randomizeLayers = () => {
     // by default, there is a body, a weapon and an empty layers
     const newLayers = getRandomizedLayers(layers.length - 3)
@@ -107,6 +115,7 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
         setLayerDetails,
         randomizeLayers,
         addLayer,
+        resetLayers,
       }}
     >
       {children}
