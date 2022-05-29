@@ -1,4 +1,5 @@
 export type Equipment = 'hat' | 'accessory' | 'shield' | 'weapon' | 'grey'
+export type NonEquipment = 'body' | 'empty'
 export const Equipments: Equipment[] = [
   'hat',
   'accessory',
