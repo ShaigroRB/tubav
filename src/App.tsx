@@ -6,15 +6,15 @@ import {
   Stack,
 } from '@mantine/core'
 import { useState } from 'react'
-import { Avatar, Footer, Layers } from './sections'
-import { Layer } from './sections/Layer'
+import { Avatar, Footer, Layers, Layer } from './sections'
 import { TubavContextProvider } from './TubavContext'
+import { getThemeColors } from './utils/colors'
 
 /**
  * Set the providers and the layout between the avatar and the layers.
  */
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark')
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('light')
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
 
@@ -29,15 +29,24 @@ function App() {
         withNormalizeCSS
       >
         <TubavContextProvider>
-          <Stack spacing="md" justify="center" style={{ padding: '1.5rem' }}>
-            <Stack justify="center">
-              <Avatar />
-            </Stack>
+          <Stack
+            spacing="md"
+            justify="center"
+            sx={(theme) => ({
+              backgroundColor: getThemeColors(theme, 'gray'),
+              padding: '1.5rem',
+            })}
+          >
+            <Group grow>
+              <Stack justify="center">
+                <Avatar />
+              </Stack>
 
-            <Group spacing="sm" grow>
-              <Layers />
+              <Stack spacing="sm">
+                <Layers />
 
-              <Layer />
+                <Layer />
+              </Stack>
             </Group>
 
             <Stack style={{ height: '1.75rem' }}>
