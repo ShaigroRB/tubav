@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  Box,
-  Center,
-  Group,
-  Paper,
-  Stack,
-  Text,
-} from '@mantine/core'
+import { ActionIcon, Group, Paper, Stack, Text } from '@mantine/core'
 import React, { useContext } from 'react'
 import { Eye, EyeOff, Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
@@ -15,27 +7,34 @@ import { getThemeColors } from '../../utils/colors'
 
 type LayerItemProps = Layer & {
   isSelected: boolean
+  onClick: () => void
 }
 
 /**
  * Item component for a layer.
  */
-const LayerItem: React.FC<LayerItemProps> = ({ name, visible, isSelected }) => (
+const LayerItem: React.FC<LayerItemProps> = ({
+  name,
+  visible,
+  isSelected,
+  onClick,
+}) => (
   <Paper
     shadow="xs"
     p="xs"
-    withBorder={isSelected}
+    onClick={onClick}
     sx={(theme) => ({
-      borderColor: getThemeColors(theme, 'dark', 1),
+      borderColor: getThemeColors(theme, 'teal', 3),
       backgroundColor: isSelected
-        ? getThemeColors(theme, 'gray', 1)
-        : 'initial',
-      borderWidth: isSelected ? 2 : 0,
-      borderStyle: isSelected ? 'solid' : 'none',
+        ? getThemeColors(theme, 'gray', 2)
+        : getThemeColors(theme, 'gray', 1),
+      borderLeftWidth: isSelected ? 4 : 0,
+      borderLeftStyle: isSelected ? 'solid' : 'none',
       ':hover': {
-        backgroundColor: getThemeColors(theme, 'gray', 1),
+        backgroundColor: getThemeColors(theme, 'gray', 2),
       },
       maxHeight: '3rem',
+      cursor: 'pointer',
     })}
   >
     <Group>
@@ -52,25 +51,26 @@ const LayerItem: React.FC<LayerItemProps> = ({ name, visible, isSelected }) => (
  * List of layers.
  */
 export const Layers: React.FC = () => {
-  const { layers, selectedLayer } = useContext(TubavContext)
+  const { layers, selectedLayer, setSelectedLayer } = useContext(TubavContext)
 
   return (
-    <Box style={{ border: '1px solid green', flex: 1, overflow: 'scroll' }}>
-      <Stack>
-        {layers.map((layer) => {
-          if (layer.category === 'empty') {
-            return null
-          }
+    <Stack style={{ overflow: 'scroll' }}>
+      {layers.map((layer) => {
+        if (layer.category === 'empty') {
+          return null
+        }
 
-          return (
-            <LayerItem
-              {...layer}
-              isSelected={layer.depth === selectedLayer}
-              key={layer.depth}
-            />
-          )
-        })}
-      </Stack>
-    </Box>
+        const isSelected = layer.depth === selectedLayer
+
+        return (
+          <LayerItem
+            {...layer}
+            isSelected={isSelected}
+            onClick={() => setSelectedLayer(layer.depth)}
+            key={layer.depth}
+          />
+        )
+      })}
+    </Stack>
   )
 }

@@ -13,6 +13,7 @@ interface ITubavContext {
   setAvatarDataURL: (dataURL: string) => void
   layers: Layer[]
   selectedLayer: number
+  setSelectedLayer: (depth: number) => void
 }
 
 const defaultState: ITubavContext = {
@@ -20,6 +21,7 @@ const defaultState: ITubavContext = {
   setAvatarDataURL: noop,
   layers: [],
   selectedLayer: 0,
+  setSelectedLayer: noop,
 }
 
 /**
@@ -49,7 +51,13 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
 
   return (
     <TubavContext.Provider
-      value={{ downloadAvatar, setAvatarDataURL, layers, selectedLayer }}
+      value={{
+        downloadAvatar,
+        setAvatarDataURL,
+        layers,
+        selectedLayer,
+        setSelectedLayer,
+      }}
     >
       {children}
     </TubavContext.Provider>
