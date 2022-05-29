@@ -1,28 +1,35 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
+import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
-import { Equipments, EQUIPMENT_IDS } from '../../utils/equipments'
 
-const random = (length: number): number => Math.floor(Math.random() * length)
-const getRandomEquipment = (isWeapon: boolean) => {
-  const category = isWeapon
-    ? 'weapon'
-    : Equipments[random(Equipments.length - 2)]
+/**
+ * Recursively draw layers on a canvas.
+ * It's done this way to ensure layers are drawn in the correct order.
+ * Returns the data url of the final image.
+ */
+const drawLayers = (
+  canvas: HTMLCanvasElement,
+  layers: Layer[],
+  setAvatarDataURL: (dataURL: string) => void,
+  index: number,
+) => {
+  const layer = layers[index]
+  const context = canvas.getContext('2d')
 
-  const equipments = EQUIPMENT_IDS[category]
-  const equipment_id = equipments[random(equipments.length - 1)]
-  return `/assets/${category}_${equipment_id}.svg`
-}
+  const tmpImg = new Image()
+  // draw the next layer only after the current layer has loaded
+  tmpImg.onload = () => {
+    context?.drawImage(tmpImg, 0, 0)
 
-const getLayers = (nbLayers: number): Layer[] => {
-  let layers: Layer[] = [{ filepath: '/assets/body.svg' }]
-  for (let i = 0; i < nbLayers; i++) {
-    const equipment = getRandomEquipment(false)
-    layers.push({ filepath: equipment })
+    // if layer is empty, it's the last layer
+    // set avatar data url
+    if (layer.name === 'empty') {
+      setAvatarDataURL(canvas.toDataURL('image/png'))
+    } else {
+      drawLayers(canvas, layers, setAvatarDataURL, index + 1)
+    }
   }
-
-  layers.push({ filepath: getRandomEquipment(true) })
-
-  return layers
+  tmpImg.src = layer.filepath
 }
 
 // fixed sizes of the svgs
@@ -35,20 +42,15 @@ const WIDTH_SVG = 462
  */
 const useCanvas = (layers: Layer[]) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { setAvatarDataURL } = useContext(TubavContext)
 
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas!.getContext('2d')
     context?.clearRect(0, 0, WIDTH_SVG, HEIGHT_SVG)
 
-    // draw layer one by one
-    // first layer is on the bottom, last is on the top
-    for (let layer of layers) {
-      const tmpImg = new Image()
-      tmpImg.onload = () => {
-        context?.drawImage(tmpImg, 0, 0)
-      }
-      tmpImg.src = layer.filepath
+    if (canvas) {
+      drawLayers(canvas, layers, setAvatarDataURL, 0)
     }
   }, [layers])
 
@@ -63,8 +65,9 @@ type CanvasProps = {
  * Canvas used to render the avatar. Its height and width are fixed.
  */
 export const Canvas: React.FC<CanvasProps> = (props) => {
-  // TODO: get the layers from future context
-  const canvasRef = useCanvas(getLayers(1000))
+  const { layers } = useContext(TubavContext)
+  const canvasRef = useCanvas(layers)
+
   return (
     <canvas height={HEIGHT_SVG} width={WIDTH_SVG} ref={canvasRef} {...props} />
   )
