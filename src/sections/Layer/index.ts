@@ -1,2 +1,2 @@
-export * from './Layer'
+export * from './LayerDetails'
 export * from './Layers'

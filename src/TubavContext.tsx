@@ -14,6 +14,7 @@ interface ITubavContext {
   layers: Layer[]
   selectedLayer: number
   setSelectedLayer: (depth: number) => void
+  setLayerDetails: (layer: Layer) => void
 }
 
 const defaultState: ITubavContext = {
@@ -22,6 +23,7 @@ const defaultState: ITubavContext = {
   layers: [],
   selectedLayer: 0,
   setSelectedLayer: noop,
+  setLayerDetails: noop,
 }
 
 /**
@@ -45,9 +47,31 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
     link.click()
   }, [avatarDataURL])
   const [selectedLayer, setSelectedLayer] = useState<number>(1)
+  const [layers, setLayers] = useState<Layer[]>(getLayers(3))
 
-  // const [layers, setLayers] = useState<Layer[]>([])
-  const layers = useMemo(() => getLayers(30), [])
+  // update a specific layer
+  const setLayerDetails = useCallback(
+    (layer: Layer) => {
+      const newLayers = layers.map((savedLayer: Layer) => {
+        if (savedLayer.depth !== layer.depth) {
+          return savedLayer
+        }
+
+        // update layer name in case its the default one
+        let name = layer.name
+        if (Equipments.includes(name as Equipment)) {
+          name = layer.category
+        }
+        return {
+          ...layer,
+          filepath: getFilepathForLayer(layer),
+          name,
+        }
+      })
+      setLayers(newLayers)
+    },
+    [setLayers, layers],
+  )
 
   return (
     <TubavContext.Provider
@@ -57,12 +81,19 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
         layers,
         selectedLayer,
         setSelectedLayer,
+        setLayerDetails,
       }}
     >
       {children}
     </TubavContext.Provider>
   )
 }
+
+/**
+ * Get the filepath for a layer based on its category and equipment id.
+ */
+const getFilepathForLayer = (layer: Layer) =>
+  `/assets/${layer.category}_${layer.equipment_id}.svg`
 
 // TODO: clean afterwards
 const random = (length: number): number => Math.floor(Math.random() * length)
