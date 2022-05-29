@@ -1,20 +1,18 @@
 import {
   Button,
   Group,
-  Paper,
   Select,
   SelectItem,
   Stack,
   Switch,
   Text,
   TextInput,
-  Title,
 } from '@mantine/core'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
-import { getThemeColors } from '../../utils/colors'
 import { Equipment, Equipments, EQUIPMENT_IDS } from '../../utils/equipments'
+import { Paper } from '../Paper'
 
 const getDataCategories = (): SelectItem[] =>
   Equipments.map((equipment) => ({
@@ -76,13 +74,7 @@ export const LayerDetails: React.FC = () => {
   // if layer is body, do not display equipment ids
   // no select for category either
   return (
-    <Paper
-      shadow="xs"
-      p="xs"
-      sx={(theme) => ({
-        backgroundColor: getThemeColors(theme, 'gray', 1),
-      })}
-    >
+    <Paper>
       <Stack align="flex-start" justify="flex-start" className="pristine">
         <TextInput
           placeholder="Name of the layer"
