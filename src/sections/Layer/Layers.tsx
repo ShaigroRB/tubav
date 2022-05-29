@@ -54,7 +54,10 @@ export const Layers: React.FC = () => {
   const { layers, selectedLayer, setSelectedLayer } = useContext(TubavContext)
 
   return (
-    <Stack style={{ overflow: 'scroll' }}>
+    <Stack
+      py="sm"
+      style={{ overflow: 'scroll', flexDirection: 'column-reverse' }}
+    >
       {layers.map((layer) => {
         if (layer.category === 'empty') {
           return null
