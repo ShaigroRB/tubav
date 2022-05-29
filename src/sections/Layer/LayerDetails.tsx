@@ -7,9 +7,10 @@ import {
   Stack,
   Switch,
   Text,
+  TextInput,
   Title,
 } from '@mantine/core'
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { getThemeColors } from '../../utils/colors'
@@ -34,6 +35,14 @@ export const LayerDetails: React.FC = () => {
   const { layers, selectedLayer, setLayerDetails } = useContext(TubavContext)
   const layer = useMemo(() => layers[selectedLayer], [selectedLayer, layers])
 
+  // define local layer name to update name only on blur (unfocus)
+  const [layerName, setLayerName] = useState<string>(layer.name)
+
+  // update local layer name if selected layer updates
+  useEffect(() => {
+    setLayerName(layer.name)
+  }, [layer])
+
   const selectDataCategories = useMemo(() => getDataCategories(), [])
   const selectDataEquipmentIds = useMemo(() => {
     if (layer.category === 'body') {
@@ -56,6 +65,14 @@ export const LayerDetails: React.FC = () => {
     setLayerDetails({ ...layer, equipment_id })
   }
 
+  const handleUpdateName = () => {
+    // only update if name was edited
+    if (layer.name !== layerName) {
+      const newName = layerName ? layerName : layer.category
+      setLayerDetails({ ...layer, name: newName })
+    }
+  }
+
   // if layer is body, do not display equipment ids
   // no select for category either
   return (
@@ -67,7 +84,21 @@ export const LayerDetails: React.FC = () => {
       })}
     >
       <Stack align="flex-start" justify="flex-start" className="pristine">
-        <Title order={2}>{layer.name}</Title>
+        <TextInput
+          placeholder="Name of the layer"
+          variant="unstyled"
+          required
+          value={layerName}
+          onChange={(event) => setLayerName(event.currentTarget.value)}
+          onBlur={(_) => handleUpdateName()}
+          sx={(theme) => ({
+            borderColor: getThemeColors(theme, 'teal', 3),
+            borderLeftWidth: 4,
+            borderLeftStyle: 'solid',
+            input: { fontSize: 26, fontWeight: 700 },
+            paddingLeft: '1rem',
+          })}
+        />
 
         {isBody ? (
           <Text>Category: {layer.category}</Text>

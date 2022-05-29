@@ -93,7 +93,9 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
  * Get the filepath for a layer based on its category and equipment id.
  */
 const getFilepathForLayer = (layer: Layer) =>
-  `/assets/${layer.category}_${layer.equipment_id}.svg`
+  layer.category === 'body' || layer.category === 'empty'
+    ? `/assets/${layer.category}.svg`
+    : `/assets/${layer.category}_${layer.equipment_id}.svg`
 
 // TODO: clean afterwards
 const random = (length: number): number => Math.floor(Math.random() * length)
