@@ -6,6 +6,12 @@ import {
   EQUIPMENT_IDS,
   NonEquipment,
 } from './utils/equipments'
+import {
+  createEmptyLayer,
+  createRandomLayer,
+  getFilepathForLayer,
+  getRandomizedLayers,
+} from './utils/layer'
 import { noop } from './utils/noop'
 
 interface ITubavContext {
@@ -15,6 +21,8 @@ interface ITubavContext {
   selectedLayer: number
   setSelectedLayer: (depth: number) => void
   setLayerDetails: (layer: Layer) => void
+  randomizeLayers: () => void
+  addLayer: () => void
 }
 
 const defaultState: ITubavContext = {
@@ -24,6 +32,8 @@ const defaultState: ITubavContext = {
   selectedLayer: 0,
   setSelectedLayer: noop,
   setLayerDetails: noop,
+  randomizeLayers: noop,
+  addLayer: noop,
 }
 
 /**
@@ -47,7 +57,7 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
     link.click()
   }, [avatarDataURL])
   const [selectedLayer, setSelectedLayer] = useState<number>(1)
-  const [layers, setLayers] = useState<Layer[]>(getLayers(3))
+  const [layers, setLayers] = useState<Layer[]>(getRandomizedLayers(1))
 
   // update a specific layer
   const setLayerDetails = useCallback(
@@ -73,6 +83,19 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
     [setLayers, layers],
   )
 
+  const addLayer = () => {
+    const newLayer = createRandomLayer(layers.length - 1)
+    const emptyLayer = createEmptyLayer(layers.length)
+    const layersWithoutEmpty = layers.slice(0, -1)
+    setLayers([...layersWithoutEmpty, newLayer, emptyLayer])
+  }
+
+  const randomizeLayers = () => {
+    // by default, there is a body, a weapon and an empty layers
+    const newLayers = getRandomizedLayers(layers.length - 3)
+    setLayers([...newLayers])
+  }
+
   return (
     <TubavContext.Provider
       value={{
@@ -82,6 +105,8 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
         selectedLayer,
         setSelectedLayer,
         setLayerDetails,
+        randomizeLayers,
+        addLayer,
       }}
     >
       {children}

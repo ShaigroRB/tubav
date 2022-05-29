@@ -11,6 +11,7 @@ import {
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
+import { getThemeColors } from '../../utils/colors'
 import { Equipment, Equipments, EQUIPMENT_IDS } from '../../utils/equipments'
 import { Paper } from '../Paper'
 
