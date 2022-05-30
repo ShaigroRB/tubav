@@ -1,11 +1,6 @@
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Layer } from './types'
-import {
-  Equipment,
-  Equipments,
-  EQUIPMENT_IDS,
-  NonEquipment,
-} from './utils/equipments'
+import { Equipment, Equipments } from './utils/equipments'
 import {
   createEmptyLayer,
   createRandomLayer,
@@ -25,6 +20,7 @@ interface ITubavContext {
   randomizeLayers: () => void
   addLayer: () => void
   resetLayers: () => void
+  deleteLayer: (depth: number) => void
 }
 
 const defaultState: ITubavContext = {
@@ -37,6 +33,7 @@ const defaultState: ITubavContext = {
   randomizeLayers: noop,
   addLayer: noop,
   resetLayers: noop,
+  deleteLayer: noop,
 }
 
 /**
@@ -49,7 +46,7 @@ type TubavContextProviderProps = { children?: React.ReactNode }
 /**
  * Provides the context of the TUBav app.
  */
-export const TubavContextProvider: FC<TubavContextProviderProps> = ({
+export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
   children,
 }) => {
   const [avatarDataURL, setAvatarDataURL] = useState<string>('')
@@ -93,6 +90,26 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
     setLayers([...layersWithoutEmpty, newLayer, emptyLayer])
   }
 
+  const deleteLayer = (depth: number) => {
+    // remove the layer corresponding to the depth
+    const newLayers = layers.filter((layer) => layer.depth !== depth)
+    // update depth of layers that were after removed layer
+    const updatedLayers = newLayers.map((layer) => {
+      if (layer.depth > depth) {
+        return { ...layer, depth: layer.depth - 1 }
+      }
+      return layer
+    })
+    setLayers([...updatedLayers])
+
+    // set new selected if empty layer is the new selected
+    const count = updatedLayers.length
+    const emptyLayer = updatedLayers[count - 1]
+    if (selectedLayer === emptyLayer.depth) {
+      setSelectedLayer(emptyLayer.depth - 1)
+    }
+  }
+
   const resetLayers = () => {
     const defaultLayers = getDefaultLayers()
     setLayers([...defaultLayers])
@@ -116,6 +133,7 @@ export const TubavContextProvider: FC<TubavContextProviderProps> = ({
         randomizeLayers,
         addLayer,
         resetLayers,
+        deleteLayer,
       }}
     >
       {children}

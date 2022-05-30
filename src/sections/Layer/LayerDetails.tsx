@@ -31,7 +31,9 @@ const getDataEquipmentIds = (category: Equipment): SelectItem[] =>
  * Details of the selected layer.
  */
 export const LayerDetails: React.FC = () => {
-  const { layers, selectedLayer, setLayerDetails } = useContext(TubavContext)
+  const { layers, selectedLayer, setLayerDetails, deleteLayer } = useContext(
+    TubavContext,
+  )
   const layer = useMemo(() => layers[selectedLayer], [selectedLayer, layers])
 
   // define local layer name to update name only on blur (unfocus)
@@ -44,7 +46,7 @@ export const LayerDetails: React.FC = () => {
 
   const selectDataCategories = useMemo(() => getDataCategories(), [])
   const selectDataEquipmentIds = useMemo(() => {
-    if (layer.category === 'body') {
+    if (layer.category === 'body' || layer.category === 'empty') {
       return []
     }
     return getDataEquipmentIds(layer.category as Equipment)
@@ -134,7 +136,12 @@ export const LayerDetails: React.FC = () => {
         </Group>
 
         {!isBody && (
-          <Button color="red" variant="light" rightIcon={<Trash />}>
+          <Button
+            color="red"
+            variant="light"
+            rightIcon={<Trash />}
+            onClick={() => deleteLayer(layer.depth)}
+          >
             Delete layer
           </Button>
         )}

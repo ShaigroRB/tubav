@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Group, Stack, Text } from '@mantine/core'
+import { ActionIcon, Box, Button, Group, Stack, Text } from '@mantine/core'
 import React, { useContext } from 'react'
 import {
   ArrowsShuffle,
@@ -15,7 +15,8 @@ import { Paper } from '../Paper'
 
 type LayerItemProps = Layer & {
   isSelected: boolean
-  onClick: () => void
+  selectLayer: () => void
+  deleteLayer: () => void
 }
 
 /**
@@ -23,12 +24,14 @@ type LayerItemProps = Layer & {
  */
 const LayerItem: React.FC<LayerItemProps> = ({
   name,
+  category,
   visible,
   isSelected,
-  onClick,
+  selectLayer,
+  deleteLayer,
 }) => (
   <Paper
-    onClick={onClick}
+    onClick={selectLayer}
     sx={(theme) => ({
       borderColor: getThemeColors(theme, 'teal', 3),
       backgroundColor: isSelected
@@ -46,9 +49,19 @@ const LayerItem: React.FC<LayerItemProps> = ({
     <Group>
       <Text sx={{ flex: 3 }}>{name}</Text>
       <ActionIcon>{visible ? <Eye /> : <EyeOff />}</ActionIcon>
-      <ActionIcon>
-        <Trash />
-      </ActionIcon>
+      {category !== 'body' ? (
+        <ActionIcon
+          onClick={(event: any) => {
+            deleteLayer()
+            // no need to select the item
+            event.stopPropagation()
+          }}
+        >
+          <Trash />
+        </ActionIcon>
+      ) : (
+        <Box style={{ width: 28 }} />
+      )}
     </Group>
   </Paper>
 )
@@ -64,6 +77,7 @@ export const Layers: React.FC = () => {
     randomizeLayers,
     addLayer,
     resetLayers,
+    deleteLayer,
   } = useContext(TubavContext)
 
   return (
@@ -83,8 +97,9 @@ export const Layers: React.FC = () => {
             <LayerItem
               {...layer}
               isSelected={isSelected}
-              onClick={() => setSelectedLayer(layer.depth)}
+              selectLayer={() => setSelectedLayer(layer.depth)}
               key={layer.depth}
+              deleteLayer={() => deleteLayer(layer.depth)}
             />
           )
         })}
