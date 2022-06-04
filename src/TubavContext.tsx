@@ -87,43 +87,47 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     [setLayers, layers],
   )
 
-  const addLayer = () => {
+  const addLayer = useCallback(() => {
     const newLayer = createRandomLayer(layers.length - 1)
     const emptyLayer = createEmptyLayer(layers.length)
     const layersWithoutEmpty = layers.slice(0, -1)
     setLayers([...layersWithoutEmpty, newLayer, emptyLayer])
-  }
+  }, [layers, setLayers])
 
-  const deleteLayer = (depth: number) => {
-    // remove the layer corresponding to the depth
-    const newLayers = layers.filter((layer) => layer.depth !== depth)
-    // update depth of layers that were after removed layer
-    const updatedLayers = newLayers.map((layer) => {
-      if (layer.depth > depth) {
-        return { ...layer, depth: layer.depth - 1 }
+  const deleteLayer = useCallback(
+    (depth: number) => {
+      // remove the layer corresponding to the depth
+      const newLayers = layers.filter((layer) => layer.depth !== depth)
+      // update depth of layers that were after removed layer
+      const updatedLayers = newLayers.map((layer) => {
+        if (layer.depth > depth) {
+          return { ...layer, depth: layer.depth - 1 }
+        }
+        return layer
+      })
+      setLayers([...updatedLayers])
+
+      // set new selected if empty layer is the new selected
+      const count = updatedLayers.length
+      const emptyLayer = updatedLayers[count - 1]
+      if (selectedLayer === emptyLayer.depth) {
+        setSelectedLayer(emptyLayer.depth - 1)
       }
-      return layer
-    })
-    setLayers([...updatedLayers])
+    },
+    [layers, setLayers, selectedLayer, setSelectedLayer],
+  )
 
-    // set new selected if empty layer is the new selected
-    const count = updatedLayers.length
-    const emptyLayer = updatedLayers[count - 1]
-    if (selectedLayer === emptyLayer.depth) {
-      setSelectedLayer(emptyLayer.depth - 1)
-    }
-  }
-
-  const resetLayers = () => {
+  const resetLayers = useCallback(() => {
     const defaultLayers = getDefaultLayers()
     setLayers([...defaultLayers])
-  }
+  }, [setLayers])
 
-  const randomizeLayers = () => {
+  const randomizeLayers = useCallback(() => {
     // by default, there is a body, a weapon and an empty layers
     const newLayers = getRandomizedLayers(layers.length - 3)
     setLayers([...newLayers])
-  }
+  }, [layers, setLayers])
+
   const swapLayers = useCallback(
     (depth1: number, depth2: number) => {
       const layer1 = layers.find((layer) => layer.depth === depth1) as Layer
