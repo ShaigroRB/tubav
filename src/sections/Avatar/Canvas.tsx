@@ -19,7 +19,9 @@ const drawLayers = (
   const tmpImg = new Image()
   // draw the next layer only after the current layer has loaded
   tmpImg.onload = () => {
-    context?.drawImage(tmpImg, 0, 0)
+    if (layer.visible) {
+      context?.drawImage(tmpImg, 0, 0)
+    }
 
     // if layer is empty, it's the last layer
     // set avatar data url

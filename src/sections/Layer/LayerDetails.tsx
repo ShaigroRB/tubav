@@ -104,6 +104,10 @@ export const LayerDetails: React.FC = () => {
     swapLayers(layer.depth, depth)
   }
 
+  const handleToggleVisibility = () => {
+    setLayerDetails({ ...layer, visible: !layer.visible })
+  }
+
   // if layer is body, do not display equipment ids
   // no select for category either
   return (
@@ -173,7 +177,7 @@ export const LayerDetails: React.FC = () => {
 
         <Group>
           <Text>Visible:</Text>
-          <Switch checked={layer.visible} />
+          <Switch checked={layer.visible} onChange={handleToggleVisibility} />
         </Group>
 
         {!isBody && (

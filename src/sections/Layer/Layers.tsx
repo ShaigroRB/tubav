@@ -17,6 +17,7 @@ type LayerItemProps = Layer & {
   isSelected: boolean
   selectLayer: () => void
   deleteLayer: () => void
+  toggleVisibility: () => void
 }
 
 /**
@@ -30,6 +31,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
   isSelected,
   selectLayer,
   deleteLayer,
+  toggleVisibility,
 }) => (
   <Paper
     onClick={selectLayer}
@@ -50,7 +52,9 @@ const LayerItem: React.FC<LayerItemProps> = ({
     <Group>
       <Text sx={{ flex: 3 }}>{name}</Text>
       <Text>{depth}</Text>
-      <ActionIcon>{visible ? <Eye /> : <EyeOff />}</ActionIcon>
+      <ActionIcon onClick={toggleVisibility}>
+        {visible ? <Eye /> : <EyeOff />}
+      </ActionIcon>
       {category !== 'body' ? (
         <ActionIcon
           onClick={(event: any) => {
@@ -80,6 +84,7 @@ export const Layers: React.FC = () => {
     addLayer,
     resetLayers,
     deleteLayer,
+    setLayerDetails,
   } = useContext(TubavContext)
 
   return (
@@ -102,6 +107,9 @@ export const Layers: React.FC = () => {
               selectLayer={() => setSelectedLayer(layer.depth)}
               key={layer.depth}
               deleteLayer={() => deleteLayer(layer.depth)}
+              toggleVisibility={() =>
+                setLayerDetails({ ...layer, visible: !layer.visible })
+              }
             />
           )
         })}
