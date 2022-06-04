@@ -1,9 +1,18 @@
-import { ActionIcon, Box, Button, Group, Stack, Text } from '@mantine/core'
-import React, { useContext } from 'react'
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Group,
+  MantineTheme,
+  Stack,
+  Text,
+} from '@mantine/core'
+import React, { useContext, useMemo } from 'react'
 import {
   ArrowsShuffle,
   Eye,
   EyeOff,
+  GripVertical,
   Plus,
   Refresh,
   Trash,
@@ -12,6 +21,7 @@ import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
 import { getThemeColors } from '../../utils/colors'
 import { Paper } from '../Paper'
+import { List, arrayMove, IItemProps } from 'react-movable'
 
 type LayerItemProps = Layer & {
   isSelected: boolean
@@ -23,53 +33,74 @@ type LayerItemProps = Layer & {
 /**
  * Item component for a layer.
  */
-const LayerItem: React.FC<LayerItemProps> = ({
-  depth,
-  name,
-  category,
-  visible,
-  isSelected,
-  selectLayer,
-  deleteLayer,
-  toggleVisibility,
-}) => (
-  <Paper
-    onClick={selectLayer}
-    sx={(theme) => ({
-      borderColor: getThemeColors(theme, 'teal', 3),
-      backgroundColor: isSelected
-        ? getThemeColors(theme, 'gray', 2)
-        : getThemeColors(theme, 'gray', 1),
-      borderLeftWidth: isSelected ? 4 : 0,
-      borderLeftStyle: isSelected ? 'solid' : 'none',
-      ':hover': {
-        backgroundColor: getThemeColors(theme, 'gray', 2),
-      },
-      maxHeight: '3rem',
-      cursor: 'pointer',
-    })}
-  >
-    <Group>
-      <Text sx={{ flex: 3 }}>{name}</Text>
-      <Text>{depth}</Text>
-      <ActionIcon onClick={toggleVisibility}>
-        {visible ? <Eye /> : <EyeOff />}
-      </ActionIcon>
-      {category !== 'body' ? (
+const LayerItem = React.forwardRef(
+  (
+    {
+      depth,
+      name,
+      category,
+      visible,
+      isSelected,
+      selectLayer,
+      deleteLayer,
+      toggleVisibility,
+      ...props
+    }: LayerItemProps & IItemProps,
+    ref: React.Ref<HTMLDivElement>,
+  ) => (
+    <Paper
+      ref={ref}
+      onClick={selectLayer}
+      sx={(theme: MantineTheme) => ({
+        borderColor: getThemeColors(theme, 'teal', 3),
+        backgroundColor: isSelected
+          ? getThemeColors(theme, 'gray', 2)
+          : getThemeColors(theme, 'gray', 1),
+        borderLeftWidth: isSelected ? 4 : 0,
+        borderLeftStyle: isSelected ? 'solid' : 'none',
+        ':hover': {
+          backgroundColor: getThemeColors(theme, 'gray', 2),
+        },
+        maxHeight: '3rem',
+        cursor: 'pointer',
+      })}
+      {...props}
+    >
+      <Group>
+        <Text sx={{ flex: 3 }}>{name}</Text>
+        <Text>{depth}</Text>
         <ActionIcon
-          onClick={(event: any) => {
-            deleteLayer()
-            // no need to select the item
-            event.stopPropagation()
+          variant="transparent"
+          sx={{
+            ':hover': {
+              cursor: 'grab',
+            },
+            ':active': {
+              cursor: 'grabbing',
+            },
           }}
         >
-          <Trash />
+          <GripVertical />
         </ActionIcon>
-      ) : (
-        <Box style={{ width: 28 }} />
-      )}
-    </Group>
-  </Paper>
+        <ActionIcon onClick={toggleVisibility}>
+          {visible ? <Eye /> : <EyeOff />}
+        </ActionIcon>
+        {category !== 'body' ? (
+          <ActionIcon
+            onClick={(event: any) => {
+              deleteLayer()
+              // no need to select the item
+              event.stopPropagation()
+            }}
+          >
+            <Trash />
+          </ActionIcon>
+        ) : (
+          <Box style={{ width: 28 }} />
+        )}
+      </Group>
+    </Paper>
+  ),
 )
 
 /**
@@ -85,11 +116,54 @@ export const Layers: React.FC = () => {
     resetLayers,
     deleteLayer,
     setLayerDetails,
+    moveLayer,
   } = useContext(TubavContext)
 
+  const reversedLayers = useMemo(() => layers.slice(0).reverse(), [layers])
+
   return (
-    <Group style={{ overflow: 'scroll' }}>
-      <Stack
+    <Group>
+      <List
+        lockVertically
+        values={reversedLayers}
+        onChange={({ oldIndex, newIndex }) => moveLayer(oldIndex, newIndex)}
+        renderList={({ children, props }) => (
+          <Stack
+            py="sm"
+            style={{
+              overflow: 'auto',
+              flexDirection: 'column',
+              flex: 2,
+            }}
+            {...props}
+          >
+            {children}
+          </Stack>
+        )}
+        renderItem={({ value: layer, props }) => {
+          if (layer.category === 'empty') {
+            return null
+          }
+
+          const isSelected = layer.depth === selectedLayer
+
+          return (
+            <LayerItem
+              {...layer}
+              isSelected={isSelected}
+              selectLayer={() => setSelectedLayer(layer.depth)}
+              deleteLayer={() => deleteLayer(layer.depth)}
+              toggleVisibility={() =>
+                setLayerDetails({ ...layer, visible: !layer.visible })
+              }
+              {...props}
+              key={layer.depth}
+            />
+          )
+          // return <TempLayerItem {...props}>{layer}</TempLayerItem>
+        }}
+      />
+      {/* <Stack
         py="sm"
         style={{ overflow: 'scroll', flexDirection: 'column-reverse', flex: 2 }}
       >
@@ -113,7 +187,7 @@ export const Layers: React.FC = () => {
             />
           )
         })}
-      </Stack>
+      </Stack> */}
       <Paper style={{ flex: 1 }}>
         <Stack>
           <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>

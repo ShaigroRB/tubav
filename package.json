@@ -12,6 +12,7 @@
     "@mantine/hooks": "^4.2.6",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-movable": "^3.0.4",
     "tabler-icons-react": "^1.48.0"
   },
   "devDependencies": {
