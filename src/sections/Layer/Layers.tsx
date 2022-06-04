@@ -23,6 +23,7 @@ type LayerItemProps = Layer & {
  * Item component for a layer.
  */
 const LayerItem: React.FC<LayerItemProps> = ({
+  depth,
   name,
   category,
   visible,
@@ -48,6 +49,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
   >
     <Group>
       <Text sx={{ flex: 3 }}>{name}</Text>
+      <Text>{depth}</Text>
       <ActionIcon>{visible ? <Eye /> : <EyeOff />}</ActionIcon>
       {category !== 'body' ? (
         <ActionIcon

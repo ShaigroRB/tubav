@@ -7,6 +7,7 @@ import {
   Switch,
   Text,
   TextInput,
+  Title,
 } from '@mantine/core'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Trash } from 'tabler-icons-react'
@@ -27,13 +28,29 @@ const getDataEquipmentIds = (category: Equipment): SelectItem[] =>
     label: id.toString(),
   }))
 
+const getDataDepths = (count: number): SelectItem[] => {
+  const depths = []
+  for (let i = 0; i < count; i++) {
+    depths.push({
+      value: i.toString(),
+      label: i.toString(),
+    })
+  }
+  return depths
+}
+
 /**
  * Details of the selected layer.
  */
 export const LayerDetails: React.FC = () => {
-  const { layers, selectedLayer, setLayerDetails, deleteLayer } = useContext(
-    TubavContext,
-  )
+  const {
+    layers,
+    selectedLayer,
+    setLayerDetails,
+    deleteLayer,
+    moveLayer,
+    swapLayers,
+  } = useContext(TubavContext)
   const layer = useMemo(() => layers[selectedLayer], [selectedLayer, layers])
 
   // define local layer name to update name only on blur (unfocus)
@@ -51,6 +68,9 @@ export const LayerDetails: React.FC = () => {
     }
     return getDataEquipmentIds(layer.category as Equipment)
   }, [layer])
+  const selectDataDepths = useMemo(() => getDataDepths(layers.length - 1), [
+    layers,
+  ])
 
   const isBody = layer.category === 'body'
 
@@ -72,6 +92,16 @@ export const LayerDetails: React.FC = () => {
       const newName = layerName ? layerName : layer.category
       setLayerDetails({ ...layer, name: newName })
     }
+  }
+
+  const handleUpdateMoveDepth = (value: string) => {
+    const depth = parseInt(value)
+    moveLayer(layer.depth, depth)
+  }
+
+  const handleUpdateSwapDepths = (value: string) => {
+    const depth = parseInt(value)
+    swapLayers(layer.depth, depth)
   }
 
   // if layer is body, do not display equipment ids
@@ -119,17 +149,28 @@ export const LayerDetails: React.FC = () => {
           </Group>
         )}
 
-        <Group>
-          <Text>
-            Depth:{' '}
-            <input
-              type="number"
-              defaultValue={layer.depth}
-              min={0}
-              max={layers.length}
-            />
-          </Text>
-        </Group>
+        <Stack>
+          <Title order={4}>Depth:</Title>
+          <Group>
+            <Group>
+              <Text>Move to depth:</Text>
+              <Select
+                data={selectDataDepths}
+                value={layer.depth.toString()}
+                onChange={handleUpdateMoveDepth}
+              />
+            </Group>
+            <Group>
+              <Text>Swap with depth:</Text>
+              <Select
+                data={selectDataDepths}
+                value={layer.depth.toString()}
+                onChange={handleUpdateSwapDepths}
+              />
+            </Group>
+          </Group>
+        </Stack>
+
         <Group>
           <Text>Visible:</Text>
           <Switch checked={layer.visible} />
