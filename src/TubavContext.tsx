@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { JsonParam, useQueryParam } from 'use-query-params'
 import { Layer } from './types'
 import { Equipment, Equipments } from './utils/equipments'
 import {
@@ -64,7 +65,7 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     link.click()
   }, [avatarDataURL])
   const [selectedLayer, setSelectedLayer] = useState<number>(1)
-  const [layers, setLayers] = useState<Layer[]>(getRandomizedLayers(1))
+  const [layers, setLayers] = useLayers()
 
   // update a specific layer
   const setLayerDetails = useCallback(
@@ -228,4 +229,28 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
       {children}
     </TubavContext.Provider>
   )
+}
+
+/**
+ * Hook that get layers from query params if they exists,
+ * otherwise create random layers.
+ * Return the layers and a function to update them.
+ */
+const useLayers = (): [
+  Layer[],
+  React.Dispatch<React.SetStateAction<Layer[]>>,
+] => {
+  const [queryParams, setQueryParams] = useQueryParam<
+    Layer[],
+    Layer[] | undefined
+  >('layers', JsonParam)
+  const [layers, setLayers] = useState<Layer[]>(
+    queryParams ? queryParams : getDefaultLayers(),
+  )
+
+  useEffect(() => {
+    setQueryParams(layers)
+  }, [layers])
+
+  return [layers, setLayers]
 }
