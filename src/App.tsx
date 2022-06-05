@@ -5,18 +5,42 @@ import {
   MantineProvider,
   Stack,
 } from '@mantine/core'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, Footer, Layers, LayerDetails } from './sections'
 import { TubavContextProvider } from './TubavContext'
 import { getThemeColors } from './utils/colors'
 
 /**
+ * Hook to get the dark/light mode from local storage.
+ * Returns dark mode by default.
+ */
+const useDarkMode = (): [
+  ColorScheme,
+  React.Dispatch<React.SetStateAction<ColorScheme>>,
+] => {
+  const item = localStorage.getItem('darkMode')
+  const [darkMode, setDarkMode] = useState<ColorScheme>(
+    item ? (item as ColorScheme) : 'dark',
+  )
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode)
+  }, [darkMode])
+
+  return [darkMode, setDarkMode]
+}
+
+/**
  * Set the providers and the layout between the avatar and the layers.
  */
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('light')
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
+  const [darkMode, setDarkMode] = useDarkMode()
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(darkMode)
+  const toggleColorScheme = (value?: ColorScheme) => {
+    const newColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark')
+    setColorScheme(newColorScheme)
+    setDarkMode(newColorScheme)
+  }
 
   return (
     <ColorSchemeProvider
