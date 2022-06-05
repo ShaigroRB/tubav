@@ -11,6 +11,7 @@ import {
 import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
 import { getThemeColors } from '../../utils/colors'
+import { getEquipmentName } from '../../utils/equipments'
 import { Paper } from '../Paper'
 
 type LayerItemProps = Layer & {
@@ -26,6 +27,7 @@ type LayerItemProps = Layer & {
 const LayerItem: React.FC<LayerItemProps> = ({
   depth,
   name,
+  equipment_id,
   category,
   visible,
   isSelected,
@@ -51,6 +53,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
   >
     <Group>
       <Text sx={{ flex: 3 }}>{name}</Text>
+      {category !== 'body' && <Text>{getEquipmentName(equipment_id)}</Text>}
       <Text>{depth}</Text>
       <ActionIcon onClick={toggleVisibility}>
         {visible ? <Eye /> : <EyeOff />}

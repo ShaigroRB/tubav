@@ -13,7 +13,12 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { getThemeColors } from '../../utils/colors'
-import { Equipment, Equipments, EQUIPMENT_IDS } from '../../utils/equipments'
+import {
+  Equipment,
+  Equipments,
+  EQUIPMENT_IDS,
+  EQUIPMENT_NAMES,
+} from '../../utils/equipments'
 import { Paper } from '../Paper'
 
 const getDataCategories = (): SelectItem[] =>
@@ -23,10 +28,13 @@ const getDataCategories = (): SelectItem[] =>
   }))
 
 const getDataEquipmentIds = (category: Equipment): SelectItem[] =>
-  EQUIPMENT_IDS[category].map((id) => ({
-    value: id.toString(),
-    label: id.toString(),
-  }))
+  EQUIPMENT_IDS[category].map((id) => {
+    const name = EQUIPMENT_NAMES[id]
+    return {
+      value: id.toString(),
+      label: name ? `${id} - ${name['fr']}` : id.toString(),
+    }
+  })
 
 const getDataDepths = (count: number): SelectItem[] => {
   const depths = []
