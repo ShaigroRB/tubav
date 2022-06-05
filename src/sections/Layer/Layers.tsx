@@ -81,17 +81,24 @@ export const Layers: React.FC = () => {
     selectedLayer,
     setSelectedLayer,
     randomizeLayers,
+    randomizeEquipmentIds,
     addLayer,
     resetLayers,
     deleteLayer,
     setLayerDetails,
   } = useContext(TubavContext)
 
+  // need max & min height to force overflow and set a height
   return (
-    <Group style={{ overflow: 'scroll' }}>
+    <Group>
       <Stack
         py="sm"
-        style={{ overflow: 'scroll', flexDirection: 'column-reverse', flex: 2 }}
+        style={{
+          maxHeight: '26rem',
+          overflow: 'scroll',
+          flexDirection: 'column-reverse',
+          flex: 2,
+        }}
       >
         {layers.map((layer) => {
           if (layer.category === 'empty') {
@@ -114,7 +121,7 @@ export const Layers: React.FC = () => {
           )
         })}
       </Stack>
-      <Paper style={{ flex: 1 }}>
+      <Paper style={{ height: '26rem' }}>
         <Stack>
           <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>
             Add layer
@@ -124,7 +131,14 @@ export const Layers: React.FC = () => {
             rightIcon={<ArrowsShuffle />}
             onClick={randomizeLayers}
           >
-            Randomize layers
+            Random categories
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<ArrowsShuffle />}
+            onClick={randomizeEquipmentIds}
+          >
+            Random equipments
           </Button>
           <Button
             variant="outline"

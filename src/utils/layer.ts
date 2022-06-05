@@ -114,3 +114,18 @@ export const getRandomizedLayers = (nbLayers: number): Layer[] => {
 
   return layers
 }
+
+/**
+ * Get layers with random equipment based on categories of given layers.
+ */
+export const getRandomizedLayersWithEquipment = (layers: Layer[]): Layer[] => {
+  const randomizedLayers = layers.map((layer) => {
+    if (layer.category === 'body' || layer.category === 'empty') {
+      return layer
+    }
+    const equipment_id = getRandomEquipmentId(layer.category)
+    const filepath = getFilepath(layer.category, equipment_id)
+    return { ...layer, equipment_id, filepath }
+  })
+  return randomizedLayers
+}

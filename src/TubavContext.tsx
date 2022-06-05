@@ -7,6 +7,7 @@ import {
   getDefaultLayers,
   getFilepathForLayer,
   getRandomizedLayers,
+  getRandomizedLayersWithEquipment,
 } from './utils/layer'
 import { noop } from './utils/noop'
 
@@ -18,6 +19,7 @@ interface ITubavContext {
   setSelectedLayer: (depth: number) => void
   setLayerDetails: (layer: Layer) => void
   randomizeLayers: () => void
+  randomizeEquipmentIds: () => void
   addLayer: () => void
   resetLayers: () => void
   deleteLayer: (depth: number) => void
@@ -33,6 +35,7 @@ const defaultState: ITubavContext = {
   setSelectedLayer: noop,
   setLayerDetails: noop,
   randomizeLayers: noop,
+  randomizeEquipmentIds: noop,
   addLayer: noop,
   resetLayers: noop,
   deleteLayer: noop,
@@ -122,9 +125,17 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     setLayers([...defaultLayers])
   }, [setLayers])
 
+  // keep same number of layers for randomization
+  // randomize categories of layers
   const randomizeLayers = useCallback(() => {
     // by default, there is a body, a weapon and an empty layers
     const newLayers = getRandomizedLayers(layers.length - 3)
+    setLayers([...newLayers])
+  }, [layers, setLayers])
+
+  // randomize equipment ids of layers (same categories)
+  const randomizeEquipmentIds = useCallback(() => {
+    const newLayers = getRandomizedLayersWithEquipment(layers)
     setLayers([...newLayers])
   }, [layers, setLayers])
 
@@ -206,6 +217,7 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         setSelectedLayer,
         setLayerDetails,
         randomizeLayers,
+        randomizeEquipmentIds,
         addLayer,
         resetLayers,
         deleteLayer,
