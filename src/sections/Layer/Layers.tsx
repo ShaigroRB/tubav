@@ -119,13 +119,11 @@ export const Layers: React.FC = () => {
     moveLayer,
   } = useContext(TubavContext)
 
-  const reversedLayers = useMemo(() => layers.slice(0).reverse(), [layers])
-
   return (
     <Group>
       <List
         lockVertically
-        values={reversedLayers}
+        values={layers}
         onChange={({ oldIndex, newIndex }) => moveLayer(oldIndex, newIndex)}
         renderList={({ children, props }) => (
           <Stack
@@ -163,7 +161,7 @@ export const Layers: React.FC = () => {
           // return <TempLayerItem {...props}>{layer}</TempLayerItem>
         }}
       />
-      {/* <Stack
+      <Stack
         py="sm"
         style={{ overflow: 'scroll', flexDirection: 'column-reverse', flex: 2 }}
       >
@@ -187,7 +185,7 @@ export const Layers: React.FC = () => {
             />
           )
         })}
-      </Stack> */}
+      </Stack>
       <Paper style={{ flex: 1 }}>
         <Stack>
           <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>

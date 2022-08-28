@@ -14,7 +14,7 @@ import { getThemeColors } from './utils/colors'
  * Set the providers and the layout between the avatar and the layers.
  */
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('light')
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark')
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
 
