@@ -25,7 +25,6 @@ interface ITubavContext {
   resetLayers: () => void
   deleteLayer: (depth: number) => void
   moveLayer: (from: number, to: number) => void
-  swapLayers: (depth1: number, depth2: number) => void
 }
 
 const defaultState: ITubavContext = {
@@ -40,7 +39,6 @@ const defaultState: ITubavContext = {
   addLayer: noop,
   resetLayers: noop,
   deleteLayer: noop,
-  swapLayers: noop,
   moveLayer: noop,
 }
 
@@ -140,26 +138,6 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     setLayers([...newLayers])
   }, [layers, setLayers])
 
-  const swapLayers = useCallback(
-    (depth1: number, depth2: number) => {
-      const layer1 = layers.find((layer) => layer.depth === depth1) as Layer
-      const layer2 = layers.find((layer) => layer.depth === depth2) as Layer
-      const newLayers = layers.map((layer) => {
-        if (layer.depth === depth1) {
-          return { ...layer2, depth: depth1 }
-        }
-        if (layer.depth === depth2) {
-          return { ...layer1, depth: depth2 }
-        }
-        return layer
-      })
-      setLayers([...newLayers])
-      // new layer selected is the one that was swapped
-      setSelectedLayer(depth2)
-    },
-    [layers, setLayers, setSelectedLayer],
-  )
-
   const moveLayer = useCallback(
     (from: number, to: number) => {
       // layer is moved from top to bottom
@@ -223,7 +201,6 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         resetLayers,
         deleteLayer,
         moveLayer,
-        swapLayers,
       }}
     >
       {children}

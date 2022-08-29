@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Button,
   Group,
   Select,
@@ -10,7 +11,7 @@ import {
   Title,
 } from '@mantine/core'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import { Trash } from 'tabler-icons-react'
+import { ArrowDown, ArrowUp, Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { getThemeColors } from '../../utils/colors'
 import {
@@ -57,7 +58,6 @@ export const LayerDetails: React.FC = () => {
     setLayerDetails,
     deleteLayer,
     moveLayer,
-    swapLayers,
   } = useContext(TubavContext)
   const layer = useMemo(() => layers[selectedLayer], [selectedLayer, layers])
 
@@ -102,14 +102,8 @@ export const LayerDetails: React.FC = () => {
     }
   }
 
-  const handleUpdateMoveDepth = (value: string) => {
-    const depth = parseInt(value)
+  const handleUpdateMoveDepth = (depth: number) => {
     moveLayer(layer.depth, depth)
-  }
-
-  const handleUpdateSwapDepths = (value: string) => {
-    const depth = parseInt(value)
-    swapLayers(layer.depth, depth)
   }
 
   const handleToggleVisibility = () => {
@@ -161,27 +155,23 @@ export const LayerDetails: React.FC = () => {
           </Group>
         )}
 
-        <Stack>
-          <Title order={4}>Depth:</Title>
-          <Group>
-            <Group>
-              <Text>Move to depth:</Text>
-              <Select
-                data={selectDataDepths}
-                value={layer.depth.toString()}
-                onChange={handleUpdateMoveDepth}
-              />
-            </Group>
-            <Group>
-              <Text>Swap with depth:</Text>
-              <Select
-                data={selectDataDepths}
-                value={layer.depth.toString()}
-                onChange={handleUpdateSwapDepths}
-              />
-            </Group>
-          </Group>
-        </Stack>
+        <Group>
+          <Text>Depth:</Text>
+          <ActionIcon
+            variant="outline"
+            disabled={layer.depth + 1 === layers.length - 1}
+            onClick={() => handleUpdateMoveDepth(layer.depth + 1)}
+          >
+            <ArrowUp />
+          </ActionIcon>
+          <ActionIcon
+            variant="outline"
+            disabled={layer.depth === 0}
+            onClick={() => handleUpdateMoveDepth(layer.depth - 1)}
+          >
+            <ArrowDown />
+          </ActionIcon>
+        </Group>
 
         <Group>
           <Text>Visible:</Text>
