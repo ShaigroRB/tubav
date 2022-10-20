@@ -8,7 +8,7 @@ import {
 
 const getFilepath = (
   category: Equipment | NonEquipment,
-  equipment_id: number,
+  equipment_id: number
 ) =>
   category === 'body' || category === 'empty'
     ? `/assets/${category}.svg`
@@ -47,7 +47,7 @@ const getRandomEquipment = (_category?: Equipment) => {
 export const createLayer = (
   category: Equipment | NonEquipment,
   equipment_id: number,
-  depth: number,
+  depth: number
 ): Layer => {
   const filepath = getFilepath(category, equipment_id)
   return {

@@ -11,7 +11,7 @@ const drawLayers = (
   canvas: HTMLCanvasElement,
   layers: Layer[],
   setAvatarDataURL: (dataURL: string) => void,
-  index: number,
+  index: number
 ) => {
   const layer = layers[index]
   const context = canvas.getContext('2d')

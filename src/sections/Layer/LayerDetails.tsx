@@ -29,13 +29,14 @@ const getDataCategories = (): SelectItem[] =>
   }))
 
 const getDataEquipmentIds = (category: Equipment): SelectItem[] =>
-  EQUIPMENT_IDS[category].map((id) => {
-    const name = EQUIPMENT_NAMES[id]
-    return {
-      value: id.toString(),
-      label: name ? `${id} - ${name['fr']}` : id.toString(),
-    }
-  })
+  EQUIPMENT_IDS[category]
+    .map((id) => {
+      const name = EQUIPMENT_NAMES[id]
+      return {
+        value: id.toString(),
+        label: name ? `${name['fr']}` : id.toString(),
+      }
+    })
 
 const getDataDepths = (count: number): SelectItem[] => {
   const depths = []
@@ -76,9 +77,10 @@ export const LayerDetails: React.FC = () => {
     }
     return getDataEquipmentIds(layer.category as Equipment)
   }, [layer])
-  const selectDataDepths = useMemo(() => getDataDepths(layers.length - 1), [
-    layers,
-  ])
+  const selectDataDepths = useMemo(
+    () => getDataDepths(layers.length - 1),
+    [layers]
+  )
 
   const isBody = layer.category === 'body'
 

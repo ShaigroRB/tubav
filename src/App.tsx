@@ -16,11 +16,11 @@ import { getThemeColors } from './utils/colors'
  */
 const useDarkMode = (): [
   ColorScheme,
-  React.Dispatch<React.SetStateAction<ColorScheme>>,
+  React.Dispatch<React.SetStateAction<ColorScheme>>
 ] => {
   const item = localStorage.getItem('darkMode')
   const [darkMode, setDarkMode] = useState<ColorScheme>(
-    item ? (item as ColorScheme) : 'dark',
+    item ? (item as ColorScheme) : 'dark'
   )
 
   useEffect(() => {

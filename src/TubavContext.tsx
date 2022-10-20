@@ -86,7 +86,7 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
       })
       setLayers(newLayers)
     },
-    [setLayers, layers],
+    [setLayers, layers]
   )
 
   const addLayer = useCallback(() => {
@@ -116,7 +116,7 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         setSelectedLayer(emptyLayer.depth - 1)
       }
     },
-    [layers, setLayers, selectedLayer, setSelectedLayer],
+    [layers, setLayers, selectedLayer, setSelectedLayer]
   )
 
   const resetLayers = useCallback(() => {
@@ -183,7 +183,7 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
       // new layer selected is the one that was moved
       setSelectedLayer(to)
     },
-    [layers, setLayers, setSelectedLayer],
+    [layers, setLayers, setSelectedLayer]
   )
 
   return (
@@ -215,14 +215,14 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
  */
 const useLayers = (): [
   Layer[],
-  React.Dispatch<React.SetStateAction<Layer[]>>,
+  React.Dispatch<React.SetStateAction<Layer[]>>
 ] => {
   const [queryParams, setQueryParams] = useQueryParam<
     Layer[],
     Layer[] | undefined
   >('layers', JsonParam)
   const [layers, setLayers] = useState<Layer[]>(
-    queryParams ? queryParams : getDefaultLayers(),
+    queryParams ? queryParams : getDefaultLayers()
   )
 
   useEffect(() => {

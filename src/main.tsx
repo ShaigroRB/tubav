@@ -19,7 +19,7 @@ const RouteV6Adapter: React.FC<{ children?: React.ReactNode }> = ({
       replace: ({ search, state }: Location) =>
         navigate({ search }, { replace: true, state }),
     }),
-    [navigate],
+    [navigate]
   )
 
   // @ts-ignore
@@ -33,5 +33,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <App />
       </QueryParamProvider>
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

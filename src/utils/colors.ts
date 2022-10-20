@@ -6,7 +6,7 @@ import { DefaultMantineColor, MantineTheme } from '@mantine/core'
 export const getThemeColors = (
   theme: MantineTheme,
   color: DefaultMantineColor,
-  shade: number = 0,
+  shade: number = 0
 ) =>
   theme.colorScheme === 'light'
     ? theme.colors[color][0 + shade]
