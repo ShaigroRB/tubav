@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
           </Center>
         </Box>
 
-        <Text style={{ textAlign: 'end' }}>© 2022 - Robin Boucher</Text>
+        <Text style={{ textAlign: 'end' }}>© 2022 Shaigro</Text>
       </Group>
     </Box>
   )

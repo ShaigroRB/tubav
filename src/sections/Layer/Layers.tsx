@@ -11,7 +11,7 @@ import {
 import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
 import { getThemeColors } from '../../utils/colors'
-import { getEquipmentName } from '../../utils/equipments'
+import { getEquipmentName } from '../../utils/equipments/utils'
 import { Paper } from '../Paper'
 
 type LayerItemProps = Layer & {
