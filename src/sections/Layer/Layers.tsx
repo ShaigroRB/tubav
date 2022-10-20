@@ -1,5 +1,5 @@
-import { ActionIcon, Box, Button, Group, Stack, Text } from '@mantine/core'
-import React, { useContext } from 'react'
+import { ActionIcon, Box, Button, Group, Stack, Text } from "@mantine/core";
+import React, { useContext, useState } from "react";
 import {
   ArrowsShuffle,
   Eye,
@@ -7,19 +7,19 @@ import {
   Plus,
   Refresh,
   Trash,
-} from 'tabler-icons-react'
-import { TubavContext } from '../../TubavContext'
-import { Layer } from '../../types'
-import { getThemeColors } from '../../utils/colors'
-import { getEquipmentName } from '../../utils/equipments/utils'
-import { Paper } from '../Paper'
+} from "tabler-icons-react";
+import { TubavContext } from "../../TubavContext";
+import { Layer } from "../../types";
+import { getThemeColors } from "../../utils/colors";
+import { getEquipmentName } from "../../utils/equipments/utils";
+import { Paper } from "../Paper";
 
 type LayerItemProps = Layer & {
-  isSelected: boolean
-  selectLayer: () => void
-  deleteLayer: () => void
-  toggleVisibility: () => void
-}
+  isSelected: boolean;
+  selectLayer: () => void;
+  deleteLayer: () => void;
+  toggleVisibility: () => void;
+};
 
 /**
  * Item component for a layer.
@@ -38,32 +38,32 @@ const LayerItem: React.FC<LayerItemProps> = ({
   <Paper
     onClick={selectLayer}
     sx={(theme) => ({
-      borderColor: getThemeColors(theme, 'teal', 3),
+      borderColor: getThemeColors(theme, "teal", 3),
       backgroundColor: isSelected
-        ? getThemeColors(theme, 'gray', 2)
-        : getThemeColors(theme, 'gray', 1),
+        ? getThemeColors(theme, "gray", 2)
+        : getThemeColors(theme, "gray", 1),
       borderLeftWidth: isSelected ? 4 : 0,
-      borderLeftStyle: isSelected ? 'solid' : 'none',
-      ':hover': {
-        backgroundColor: getThemeColors(theme, 'gray', 2),
+      borderLeftStyle: isSelected ? "solid" : "none",
+      ":hover": {
+        backgroundColor: getThemeColors(theme, "gray", 2),
       },
-      maxHeight: '3rem',
-      cursor: 'pointer',
+      maxHeight: "3rem",
+      cursor: "pointer",
     })}
   >
     <Group>
       <Text sx={{ flex: 3 }}>{name}</Text>
-      {category !== 'body' && <Text>{getEquipmentName(equipment_id)}</Text>}
+      {category !== "body" && <Text>{getEquipmentName(equipment_id)}</Text>}
       <Text>{depth}</Text>
       <ActionIcon onClick={toggleVisibility}>
         {visible ? <Eye /> : <EyeOff />}
       </ActionIcon>
-      {category !== 'body' ? (
+      {category !== "body" ? (
         <ActionIcon
           onClick={(event: any) => {
-            deleteLayer()
+            deleteLayer();
             // no need to select the item
-            event.stopPropagation()
+            event.stopPropagation();
           }}
         >
           <Trash />
@@ -73,7 +73,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
       )}
     </Group>
   </Paper>
-)
+);
 
 /**
  * List of layers.
@@ -89,7 +89,8 @@ export const Layers: React.FC = () => {
     resetLayers,
     deleteLayer,
     setLayerDetails,
-  } = useContext(TubavContext)
+    drawingLayers
+  } = useContext(TubavContext);
 
   // need max & min height to force overflow and set a height
   return (
@@ -97,18 +98,18 @@ export const Layers: React.FC = () => {
       <Stack
         py="sm"
         style={{
-          maxHeight: '26rem',
-          overflow: 'scroll',
-          flexDirection: 'column-reverse',
+          maxHeight: "26rem",
+          overflow: "scroll",
+          flexDirection: "column-reverse",
           flex: 2,
         }}
       >
         {layers.map((layer) => {
-          if (layer.category === 'empty') {
-            return null
+          if (layer.category === "empty") {
+            return null;
           }
 
-          const isSelected = layer.depth === selectedLayer
+          const isSelected = layer.depth === selectedLayer;
 
           return (
             <LayerItem
@@ -121,15 +122,21 @@ export const Layers: React.FC = () => {
                 setLayerDetails({ ...layer, visible: !layer.visible })
               }
             />
-          )
+          );
         })}
       </Stack>
-      <Paper style={{ height: '26rem' }}>
+      <Paper style={{ height: "26rem" }}>
         <Stack>
-          <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>
+          <Button
+            disabled={drawingLayers}
+            variant="outline"
+            rightIcon={<Plus />}
+            onClick={addLayer}
+          >
             Add layer
           </Button>
           <Button
+            disabled={drawingLayers}
             variant="outline"
             rightIcon={<ArrowsShuffle />}
             onClick={randomizeLayers}
@@ -137,6 +144,7 @@ export const Layers: React.FC = () => {
             Random categories
           </Button>
           <Button
+            disabled={drawingLayers}
             variant="outline"
             rightIcon={<ArrowsShuffle />}
             onClick={randomizeEquipmentIds}
@@ -144,6 +152,7 @@ export const Layers: React.FC = () => {
             Random equipments
           </Button>
           <Button
+            disabled={drawingLayers}
             variant="outline"
             rightIcon={<Refresh />}
             onClick={resetLayers}
@@ -153,5 +162,5 @@ export const Layers: React.FC = () => {
         </Stack>
       </Paper>
     </Group>
-  )
-}
+  );
+};

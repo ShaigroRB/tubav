@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { JsonParam, useQueryParam } from "use-query-params";
 import { Layer } from "./types";
 import {
@@ -34,6 +40,7 @@ interface ITubavContext {
   resetLayers: () => void;
   deleteLayer: (depth: number) => void;
   moveLayer: (from: number, to: number) => void;
+  drawingLayers: boolean;
 }
 
 const defaultState: ITubavContext = {
@@ -51,6 +58,7 @@ const defaultState: ITubavContext = {
   resetLayers: noop,
   deleteLayer: noop,
   moveLayer: noop,
+  drawingLayers: false,
 };
 
 /**
@@ -75,6 +83,17 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
   }, [avatarDataURL]);
   const [selectedLayer, setSelectedLayer] = useState<number>(1);
   const [layers, setLayers] = useLayers();
+  const [drawingLayers, setDrawingLayers] = useState(false);
+  const prevLayers = usePrevious<Layer[]>(layers);
+
+  useEffect(() => {
+    if (!drawingLayers && prevLayers !== layers) {
+      setDrawingLayers(true);
+    }
+    if (drawingLayers) {
+      setTimeout(() => setDrawingLayers(false), 50);
+    }
+  }, [layers, drawingLayers, setDrawingLayers]);
 
   // update a specific layer
   const setLayerDetails = useCallback(
@@ -197,8 +216,14 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     [layers, setLayers, setSelectedLayer]
   );
 
-  const SORTED_EQUIPMENT_NAMES_FR = useMemo(() => getSortedEquipmentNamesFR(), [])
-  const SORTED_EQUIPMENT_NAMES_EN = useMemo(() => getSortedEquipmentNamesEN(), [])
+  const SORTED_EQUIPMENT_NAMES_FR = useMemo(
+    () => getSortedEquipmentNamesFR(),
+    []
+  );
+  const SORTED_EQUIPMENT_NAMES_EN = useMemo(
+    () => getSortedEquipmentNamesEN(),
+    []
+  );
 
   return (
     <TubavContext.Provider
@@ -215,8 +240,9 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         resetLayers,
         deleteLayer,
         moveLayer,
+        drawingLayers,
         SORTED_EQUIPMENT_NAMES_FR,
-        SORTED_EQUIPMENT_NAMES_EN
+        SORTED_EQUIPMENT_NAMES_EN,
       }}
     >
       {children}
@@ -246,4 +272,24 @@ const useLayers = (): [
   }, [layers]);
 
   return [layers, setLayers];
+};
+
+/**
+ * Use previous value of the last render.
+ *
+ * Shamelessly taken from:
+ * https://vhudyma-blog.eu/react-hooks-useprevious/
+ */
+const usePrevious = <T extends unknown>(value: T): T | undefined => {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef<T>();
+
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
 };
