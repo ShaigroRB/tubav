@@ -6,7 +6,7 @@ import {
   Stack,
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { Avatar, Footer, Layers, LayerDetails } from './sections'
+import { Avatar, Footer, LayersEditor, LayerDetails } from './sections'
 import { TubavContextProvider } from './TubavContext'
 import { getThemeColors } from './utils/colors'
 
@@ -67,7 +67,7 @@ function App() {
               </Stack>
 
               <Stack spacing="sm">
-                <Layers />
+                <LayersEditor />
 
                 <LayerDetails />
               </Stack>

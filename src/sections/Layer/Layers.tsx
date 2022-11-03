@@ -1,18 +1,12 @@
-import { ActionIcon, Box, Button, Group, Stack, Text } from '@mantine/core'
+import { ActionIcon, Box, Group, Stack, StackProps, Text } from '@mantine/core'
 import React, { useContext } from 'react'
-import {
-  ArrowsShuffle,
-  Eye,
-  EyeOff,
-  Plus,
-  Refresh,
-  Trash,
-} from 'tabler-icons-react'
+import { Eye, EyeOff, Trash } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { Layer } from '../../types'
 import { getThemeColors } from '../../utils/colors'
 import { getEquipmentName } from '../../utils/equipments/utils'
 import { Paper } from '../Paper'
+import { LayerActions } from './LayerActions'
 
 type LayerItemProps = Layer & {
   isSelected: boolean
@@ -78,80 +72,45 @@ const LayerItem: React.FC<LayerItemProps> = ({
 /**
  * List of layers.
  */
-export const Layers: React.FC = () => {
+export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
   const {
     layers,
     selectedLayer,
     setSelectedLayer,
-    randomizeLayers,
-    randomizeEquipmentIds,
-    addLayer,
-    resetLayers,
     deleteLayer,
     setLayerDetails,
   } = useContext(TubavContext)
 
-  // need max & min height to force overflow and set a height
   return (
-    <Group>
-      <Stack
-        py="sm"
-        style={{
-          maxHeight: '26rem',
-          overflow: 'scroll',
-          flexDirection: 'column-reverse',
-          flex: 2,
-        }}
-      >
-        {layers.map((layer) => {
-          if (layer.category === 'empty') {
-            return null
-          }
+    <Stack
+      py="sm"
+      sx={{
+        overflow: 'scroll',
+        flexDirection: 'column-reverse',
+        ...sx,
+      }}
+      {...props}
+    >
+      {layers.map((layer) => {
+        if (layer.category === 'empty') {
+          return null
+        }
 
-          const isSelected = layer.depth === selectedLayer
+        const isSelected = layer.depth === selectedLayer
 
-          return (
-            <LayerItem
-              {...layer}
-              isSelected={isSelected}
-              selectLayer={() => setSelectedLayer(layer.depth)}
-              key={layer.depth}
-              deleteLayer={() => deleteLayer(layer.depth)}
-              toggleVisibility={() =>
-                setLayerDetails({ ...layer, visible: !layer.visible })
-              }
-            />
-          )
-        })}
-      </Stack>
-      <Paper style={{ height: '26rem' }}>
-        <Stack>
-          <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>
-            Add layer
-          </Button>
-          <Button
-            variant="outline"
-            rightIcon={<ArrowsShuffle />}
-            onClick={randomizeLayers}
-          >
-            Random categories
-          </Button>
-          <Button
-            variant="outline"
-            rightIcon={<ArrowsShuffle />}
-            onClick={randomizeEquipmentIds}
-          >
-            Random equipments
-          </Button>
-          <Button
-            variant="outline"
-            rightIcon={<Refresh />}
-            onClick={resetLayers}
-          >
-            Reset layers
-          </Button>
-        </Stack>
-      </Paper>
-    </Group>
+        return (
+          <LayerItem
+            {...layer}
+            isSelected={isSelected}
+            selectLayer={() => setSelectedLayer(layer.depth)}
+            key={layer.depth}
+            deleteLayer={() => deleteLayer(layer.depth)}
+            toggleVisibility={() =>
+              setLayerDetails({ ...layer, visible: !layer.visible })
+            }
+          />
+        )
+      })}
+    </Stack>
   )
 }

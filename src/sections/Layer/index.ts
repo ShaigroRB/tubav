@@ -1,2 +1,2 @@
+export * from './LayersEditor'
 export * from './LayerDetails'
-export * from './Layers'
