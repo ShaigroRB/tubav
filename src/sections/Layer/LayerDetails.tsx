@@ -19,6 +19,7 @@ import {
   Equipments,
   EQUIPMENT_IDS,
   EQUIPMENT_NAMES,
+  sortEquipmentsByName,
 } from '../../utils/equipments'
 import { Paper } from '../Paper'
 
@@ -37,6 +38,7 @@ const getDataEquipmentIds = (category: Equipment): SelectItem[] =>
         label: name ? `${name['fr']}` : id.toString(),
       }
     })
+    .sort((a, b) => sortEquipmentsByName(a.label, b.label))
 
 const getDataDepths = (count: number): SelectItem[] => {
   const depths = []
@@ -59,6 +61,7 @@ export const LayerDetails: React.FC = () => {
     setLayerDetails,
     deleteLayer,
     moveLayer,
+    SORTED_EQUIPMENT_NAMES_FR,
   } = useContext(TubavContext)
   const layer = useMemo(() => layers[selectedLayer], [selectedLayer, layers])
 
@@ -75,7 +78,8 @@ export const LayerDetails: React.FC = () => {
     if (layer.category === 'body' || layer.category === 'empty') {
       return []
     }
-    return getDataEquipmentIds(layer.category as Equipment)
+    return SORTED_EQUIPMENT_NAMES_FR[layer.category as Equipment]
+    // return getDataEquipmentIds(layer.category as Equipment)
   }, [layer])
   const selectDataDepths = useMemo(
     () => getDataDepths(layers.length - 1),
@@ -118,6 +122,7 @@ export const LayerDetails: React.FC = () => {
     <Paper>
       <Stack align="flex-start" justify="flex-start" className="pristine">
         <TextInput
+          maxLength={17}
           placeholder="Name of the layer"
           variant="unstyled"
           required
@@ -148,7 +153,7 @@ export const LayerDetails: React.FC = () => {
 
         {!isBody && (
           <Group>
-            <Text>Equipment id:</Text>
+            <Text>Equipment:</Text>
             <Select
               data={selectDataEquipmentIds}
               value={layer.equipment_id.toString()}

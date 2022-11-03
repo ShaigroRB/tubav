@@ -1,7 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { JsonParam, useQueryParam } from 'use-query-params'
 import { Layer } from './types'
-import { Equipment, Equipments } from './utils/equipments'
+import {
+  ComputedEquipment,
+  emptyEquipments,
+  Equipment,
+  Equipments,
+  getSortedEquipmentNamesEN,
+  getSortedEquipmentNamesFR,
+} from './utils/equipments'
 import {
   createEmptyLayer,
   createRandomLayer,
@@ -17,6 +24,8 @@ interface ITubavContext {
   setAvatarDataURL: (dataURL: string) => void
   layers: Layer[]
   selectedLayer: number
+  SORTED_EQUIPMENT_NAMES_FR: Record<Equipment, ComputedEquipment[]>
+  SORTED_EQUIPMENT_NAMES_EN: Record<Equipment, ComputedEquipment[]>
   setSelectedLayer: (depth: number) => void
   setLayerDetails: (layer: Layer) => void
   randomizeLayers: () => void
@@ -32,6 +41,8 @@ const defaultState: ITubavContext = {
   setAvatarDataURL: noop,
   layers: [],
   selectedLayer: 0,
+  SORTED_EQUIPMENT_NAMES_FR: emptyEquipments,
+  SORTED_EQUIPMENT_NAMES_EN: emptyEquipments,
   setSelectedLayer: noop,
   setLayerDetails: noop,
   randomizeLayers: noop,
@@ -186,6 +197,15 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     [layers, setLayers, setSelectedLayer]
   )
 
+  const SORTED_EQUIPMENT_NAMES_FR = useMemo(
+    () => getSortedEquipmentNamesFR(),
+    []
+  )
+  const SORTED_EQUIPMENT_NAMES_EN = useMemo(
+    () => getSortedEquipmentNamesEN(),
+    []
+  )
+
   return (
     <TubavContext.Provider
       value={{
@@ -201,6 +221,8 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         resetLayers,
         deleteLayer,
         moveLayer,
+        SORTED_EQUIPMENT_NAMES_FR,
+        SORTED_EQUIPMENT_NAMES_EN,
       }}
     >
       {children}
