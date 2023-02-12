@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
 
   return (
     <Box>
-      <Divider style={{ height: 3 }} />
+      <Divider sx={{ height: 3 }} />
 
       <Group grow my="xs">
         <Group position="left">
@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
           </Center>
         </Box>
 
-        <Text style={{ textAlign: 'end' }}>© 2022 Shaigro</Text>
+        <Text sx={{ textAlign: 'end' }}>© 2022 Shaigro</Text>
       </Group>
     </Box>
   )

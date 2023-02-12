@@ -11,7 +11,7 @@ import { Layers } from './Layers'
  */
 export const LayersEditor: React.FC = () => (
   <Group sx={{ maxHeight: '32rem', minHeight: '32rem' }}>
-    <Layers sx={{ flex: 1 }} />
+    <Layers sx={{ flex: 3 }} />
     <LayerActions />
   </Group>
 )

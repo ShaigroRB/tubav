@@ -11,12 +11,12 @@ export const Avatar = () => {
   const { downloadAvatar } = useContext(TubavContext)
 
   return (
-    <Stack style={{ border: '3px solid red' }} justify="center">
+    <Stack justify="center">
       <Box style={{ flex: 3, textAlign: 'center' }}>
         <Canvas id="ub-avatar" />
       </Box>
 
-      <Group style={{ flex: 1 }} position="center">
+      <Group sx={{ flex: 1 }} position="center">
         <Button onClick={downloadAvatar} rightIcon={<Download />}>
           Download
         </Button>
