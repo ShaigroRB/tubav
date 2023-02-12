@@ -6,9 +6,8 @@ import {
   Stack,
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { Avatar, Footer, LayersEditor, LayerDetails } from './sections'
+import { Avatar, Footer, LayersEditor } from './sections'
 import { TubavContextProvider } from './TubavContext'
-import { getThemeColors } from './utils/colors'
 
 /**
  * Hook to get the dark/light mode from local storage.
@@ -57,8 +56,9 @@ function App() {
             spacing="md"
             justify="center"
             sx={(theme) => ({
-              backgroundColor: getThemeColors(theme, 'gray'),
-              padding: '1.5rem',
+              paddingTop: '1rem',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
             })}
           >
             <Group grow>
@@ -68,14 +68,11 @@ function App() {
 
               <Stack spacing="sm">
                 <LayersEditor />
-
                 <LayerDetails />
               </Stack>
             </Group>
 
-            <Stack style={{ height: '1.75rem' }}>
-              <Footer />
-            </Stack>
+            <Footer />
           </Stack>
         </TubavContextProvider>
       </MantineProvider>
