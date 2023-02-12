@@ -68,7 +68,6 @@ function App() {
 
               <Stack spacing="sm">
                 <LayersEditor />
-                <LayerDetails />
               </Stack>
             </Group>
 
