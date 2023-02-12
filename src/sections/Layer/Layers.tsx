@@ -1,18 +1,56 @@
-import { ActionIcon, Box, Group, Stack, StackProps, Text } from '@mantine/core'
+import {
+  ActionIcon,
+  Box,
+  Group,
+  Stack,
+  StackProps,
+  Text,
+  ThemeIcon,
+} from '@mantine/core'
 import React, { useContext } from 'react'
-import { Eye, EyeOff, Trash } from 'tabler-icons-react'
+import {
+  ArrowDown,
+  ArrowUp,
+  BrandRedhat,
+  DotsCircleHorizontal,
+  Edit,
+  Eye,
+  EyeOff,
+  Shield,
+  Snowman,
+  Sunglasses,
+  Sword,
+  Trash,
+} from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
-import { Layer } from '../../types'
+import { Layer, LayerCategory } from '../../types'
 import { getThemeColors } from '../../utils/colors'
 import { getEquipmentName } from '../../utils/equipments/utils'
 import { Paper } from '../Paper'
-import { LayerActions } from './LayerActions'
+
+const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
+  return (
+    <Text
+      sx={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        width: '10rem',
+      }}
+    >
+      {text}
+    </Text>
+  )
+}
 
 type LayerItemProps = Layer & {
   isSelected: boolean
+  nbLayers: number
   selectLayer: () => void
   deleteLayer: () => void
   toggleVisibility: () => void
+  moveLayerDown: () => void
+  moveLayerUp: () => void
 }
 
 /**
@@ -20,54 +58,85 @@ type LayerItemProps = Layer & {
  */
 const LayerItem: React.FC<LayerItemProps> = ({
   depth,
-  name,
   equipment_id,
   category,
   visible,
   isSelected,
+  nbLayers,
   selectLayer,
   deleteLayer,
   toggleVisibility,
-}) => (
-  <Paper
-    onClick={selectLayer}
-    sx={(theme) => ({
-      borderColor: getThemeColors(theme, 'teal', 3),
-      backgroundColor: isSelected
-        ? getThemeColors(theme, 'gray', 2)
-        : getThemeColors(theme, 'gray', 1),
-      borderLeftWidth: isSelected ? 4 : 0,
-      borderLeftStyle: isSelected ? 'solid' : 'none',
-      ':hover': {
-        backgroundColor: getThemeColors(theme, 'gray', 2),
-      },
-      maxHeight: '3rem',
-      cursor: 'pointer',
-    })}
-  >
-    <Group>
-      <Text sx={{ flex: 3 }}>{name}</Text>
-      {category !== 'body' && <Text>{getEquipmentName(equipment_id)}</Text>}
-      <Text>{depth}</Text>
-      <ActionIcon onClick={toggleVisibility}>
-        {visible ? <Eye /> : <EyeOff />}
-      </ActionIcon>
-      {category !== 'body' ? (
-        <ActionIcon
-          onClick={(event: any) => {
-            deleteLayer()
-            // no need to select the item
-            event.stopPropagation()
-          }}
-        >
-          <Trash />
-        </ActionIcon>
-      ) : (
-        <Box style={{ width: 28 }} />
-      )}
-    </Group>
-  </Paper>
-)
+  moveLayerDown,
+  moveLayerUp,
+}) => {
+
+  return (
+    <>
+      <Paper
+        onClickCapture={selectLayer}
+        sx={(theme) => ({
+          borderColor: getThemeColors(theme, 'teal', 3),
+          backgroundColor: isSelected
+            ? getThemeColors(theme, 'gray', 2)
+            : getThemeColors(theme, 'gray', 1),
+          borderLeftWidth: isSelected ? 4 : 0,
+          borderLeftStyle: isSelected ? 'solid' : 'none',
+          ':hover': {
+            backgroundColor: getThemeColors(theme, 'gray', 2),
+          },
+          maxHeight: '3rem',
+          cursor: 'pointer',
+        })}
+      >
+        <Group>
+          <ThemeIcon color="teal" variant="light">
+            <CategoryIcon category={category} />
+          </ThemeIcon>
+          {category !== 'body' && (
+            <TruncatedText text={getEquipmentName(equipment_id)} />
+          )}
+          <Group spacing="xs" sx={{ flexWrap: 'nowrap', marginLeft: 'auto' }}>
+            <ActionIcon
+              size={22}
+              disabled={depth + 1 === nbLayers - 1}
+              onClick={moveLayerUp}
+            >
+              <ArrowUp />
+            </ActionIcon>
+            <ActionIcon
+              size={22}
+              disabled={depth === 0}
+              onClick={moveLayerDown}
+            >
+              <ArrowDown />
+            </ActionIcon>
+            <ActionIcon size={22} onClick={toggleVisibility}>
+              {visible ? <Eye /> : <EyeOff />}
+            </ActionIcon>
+            <ActionIcon
+              disabled={category === 'body'}
+              size={22}
+              onClick={(event: any) => {
+                deleteLayer()
+                // no need to select the item
+                event.stopPropagation()
+              }}
+            >
+              <Trash />
+            </ActionIcon>
+          </Group>
+        </Group>
+      </Paper>
+
+    </>
+  )
+}
+
+type DIRECTION = 'UP' | 'DOWN'
+const Directions: Record<DIRECTION, number> = {
+  UP: 1,
+  DOWN: -1,
+}
 
 /**
  * List of layers.
@@ -78,8 +147,15 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
     selectedLayer,
     setSelectedLayer,
     deleteLayer,
+    moveLayer: _moveLayer,
     setLayerDetails,
   } = useContext(TubavContext)
+
+  const moveLayer = (depth: number, direction: DIRECTION) => {
+    const newDepth = depth + Directions[direction]
+    _moveLayer(depth, newDepth)
+    setSelectedLayer(newDepth)
+  }
 
   return (
     <Stack
@@ -102,6 +178,9 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
           <LayerItem
             {...layer}
             isSelected={isSelected}
+            nbLayers={layers.length}
+            moveLayerDown={() => moveLayer(layer.depth, 'DOWN')}
+            moveLayerUp={() => moveLayer(layer.depth, 'UP')}
             selectLayer={() => setSelectedLayer(layer.depth)}
             key={layer.depth}
             deleteLayer={() => deleteLayer(layer.depth)}
@@ -113,4 +192,24 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
       })}
     </Stack>
   )
+}
+
+const CategoryIcon: React.FC<{ category: Equipment | NonEquipment }> = ({
+  category,
+}): React.ReactElement | null => {
+  switch (category) {
+    case 'accessory':
+      return <Sunglasses />
+    case 'grey':
+      return <DotsCircleHorizontal />
+    case 'hat':
+      return <BrandRedhat />
+    case 'shield':
+      return <Shield />
+    case 'weapon':
+      return <Sword />
+    case 'body':
+      return <Snowman />
+  }
+  return null
 }
