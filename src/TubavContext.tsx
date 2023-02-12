@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { SelectItem } from '@mantine/core'
 import { JsonParam, useQueryParam } from 'use-query-params'
-import { Layer } from './types'
+import { Layer, LayerCategory } from './types'
 import {
   ComputedEquipment,
   emptyEquipments,
@@ -24,8 +25,12 @@ interface ITubavContext {
   setAvatarDataURL: (dataURL: string) => void
   layers: Layer[]
   selectedLayer: number
+
   SORTED_EQUIPMENT_NAMES_FR: Record<Equipment, ComputedEquipment[]>
   SORTED_EQUIPMENT_NAMES_EN: Record<Equipment, ComputedEquipment[]>
+  categoriesSelectOptions: SelectItem[]
+  equipmentsSelectOptions: (category: LayerCategory) => SelectItem[]
+
   setSelectedLayer: (depth: number) => void
   setLayerDetails: (layer: Layer) => void
   randomizeLayers: () => void
@@ -43,6 +48,8 @@ const defaultState: ITubavContext = {
   selectedLayer: 0,
   SORTED_EQUIPMENT_NAMES_FR: emptyEquipments,
   SORTED_EQUIPMENT_NAMES_EN: emptyEquipments,
+  categoriesSelectOptions: [],
+  equipmentsSelectOptions: (_: LayerCategory) => [],
   setSelectedLayer: noop,
   setLayerDetails: noop,
   randomizeLayers: noop,
@@ -206,6 +213,14 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
     []
   )
 
+  const categoriesSelectOptions = useMemo(
+    () => getCategoriesSelectOptions(),
+    []
+  )
+  const equipmentsSelectOptions = getEquipmentsSelectOptions(
+    SORTED_EQUIPMENT_NAMES_FR
+  )
+
   return (
     <TubavContext.Provider
       value={{
@@ -223,6 +238,8 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
         moveLayer,
         SORTED_EQUIPMENT_NAMES_FR,
         SORTED_EQUIPMENT_NAMES_EN,
+        categoriesSelectOptions,
+        equipmentsSelectOptions,
       }}
     >
       {children}
@@ -253,3 +270,18 @@ const useLayers = (): [
 
   return [layers, setLayers]
 }
+
+const getCategoriesSelectOptions = (): SelectItem[] =>
+  Equipments.map((equipment) => ({
+    value: equipment.toString(),
+    label: equipment.toString(),
+  }))
+
+const getEquipmentsSelectOptions =
+  (SORTED_EQUIPMENT_NAMES_FR: Record<Equipment, ComputedEquipment[]>) =>
+  (category: LayerCategory): SelectItem[] => {
+    if (category === 'body' || category === 'empty') {
+      return []
+    }
+    return SORTED_EQUIPMENT_NAMES_FR[category as Equipment]
+  }

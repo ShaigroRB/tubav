@@ -7,6 +7,7 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
 import React, { useContext } from 'react'
 import {
   ArrowDown,
@@ -25,8 +26,10 @@ import {
 import { TubavContext } from '../../TubavContext'
 import { Layer, LayerCategory } from '../../types'
 import { getThemeColors } from '../../utils/colors'
+import { Equipment, NonEquipment } from '../../utils/equipments'
 import { getEquipmentName } from '../../utils/equipments/utils'
 import { Paper } from '../Paper'
+import { LayerEditionModal } from './LayerEditionModal'
 
 const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
   return (
@@ -51,6 +54,7 @@ type LayerItemProps = Layer & {
   toggleVisibility: () => void
   moveLayerDown: () => void
   moveLayerUp: () => void
+  editLayer: (category: LayerCategory, equipment: number) => void
 }
 
 /**
@@ -68,7 +72,9 @@ const LayerItem: React.FC<LayerItemProps> = ({
   toggleVisibility,
   moveLayerDown,
   moveLayerUp,
+  editLayer,
 }) => {
+  const [opened, { open: openModal, close: closeModal }] = useDisclosure(false)
 
   return (
     <>
@@ -110,6 +116,13 @@ const LayerItem: React.FC<LayerItemProps> = ({
             >
               <ArrowDown />
             </ActionIcon>
+            <ActionIcon
+              disabled={category === 'body'}
+              size={22}
+              onClick={openModal}
+            >
+              <Edit />
+            </ActionIcon>
             <ActionIcon size={22} onClick={toggleVisibility}>
               {visible ? <Eye /> : <EyeOff />}
             </ActionIcon>
@@ -128,6 +141,13 @@ const LayerItem: React.FC<LayerItemProps> = ({
         </Group>
       </Paper>
 
+      <LayerEditionModal
+        opened={opened}
+        close={closeModal}
+        equipment={equipment_id}
+        category={category}
+        editLayer={editLayer}
+      />
     </>
   )
 }
@@ -184,6 +204,9 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
             selectLayer={() => setSelectedLayer(layer.depth)}
             key={layer.depth}
             deleteLayer={() => deleteLayer(layer.depth)}
+            editLayer={(category: LayerCategory, equipment_id: number) => {
+              setLayerDetails({ ...layer, category, equipment_id })
+            }}
             toggleVisibility={() =>
               setLayerDetails({ ...layer, visible: !layer.visible })
             }

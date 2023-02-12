@@ -8,3 +8,5 @@ export type Layer = {
   depth: number
   visible: boolean
 }
+
+export type LayerCategory = Equipment | NonEquipment
