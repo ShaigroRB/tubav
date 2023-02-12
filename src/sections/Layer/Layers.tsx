@@ -79,6 +79,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
   return (
     <>
       <Paper
+        onDoubleClickCapture={openModal}
         onClickCapture={selectLayer}
         sx={(theme) => ({
           borderColor: getThemeColors(theme, 'teal', 3),
