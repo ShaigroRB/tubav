@@ -15,7 +15,7 @@ import { PaperProps, Paper } from '../Paper'
  *   3. random hat
  *   4. random weapon
  */
-export const LayerActions: React.FC = (props: PaperProps) => {
+export const LayerActions: React.FC<PaperProps> = ({ ...props }) => {
   const { randomizeLayers, randomizeEquipmentIds, resetLayers, addLayer } =
     useContext(TubavContext)
 

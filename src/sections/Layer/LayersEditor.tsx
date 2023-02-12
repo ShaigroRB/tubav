@@ -10,8 +10,8 @@ import { Layers } from './Layers'
  * different avatars.
  */
 export const LayersEditor: React.FC = () => (
-  <Group sx={{ maxHeight: '32rem', minHeight: '32rem' }}>
-    <Layers sx={{ flex: 3 }} />
+  <Group sx={{ height: '28rem', alignItems: 'flex-start' }}>
+    <Layers sx={{ flex: 3, maxHeight: '28rem', overflow: 'scroll' }} />
     <LayerActions />
   </Group>
 )

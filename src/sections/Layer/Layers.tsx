@@ -91,7 +91,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
           ':hover': {
             backgroundColor: getThemeColors(theme, 'gray', 2),
           },
-          maxHeight: '3rem',
+          height: '3rem',
           cursor: 'pointer',
         })}
       >
@@ -182,7 +182,6 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
     <Stack
       py="sm"
       sx={{
-        overflow: 'scroll',
         flexDirection: 'column-reverse',
         ...sx,
       }}
