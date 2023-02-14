@@ -6,7 +6,7 @@ import {
   Stack,
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { Avatar, Footer, LayersEditor } from './sections'
+import { Avatar, Footer, LayersEditor, Topbar } from './sections'
 import { TubavContextProvider } from './TubavContext'
 
 /**
@@ -61,6 +61,7 @@ function App() {
               paddingRight: '1rem',
             })}
           >
+            <Topbar />
             <Group grow>
               <Stack justify="center">
                 <Avatar />

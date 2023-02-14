@@ -1,51 +1,27 @@
-import {
-  ActionIcon,
-  Anchor,
-  Box,
-  Center,
-  Divider,
-  Group,
-  Text,
-  useMantineColorScheme,
-} from '@mantine/core'
+import { Anchor, Box, Divider, Group, Text } from '@mantine/core'
 import React from 'react'
-import { BrandGithub, Moon, Sun } from 'tabler-icons-react'
 
 /**
  * Displays a link to the Github repository, a button to switch themes and copyright.
  */
 export const Footer: React.FC = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
-  const dark = colorScheme === 'dark'
-
   return (
     <Box>
-      <Divider sx={{ height: 3 }} />
+      <Divider sx={{ height: 1 }} />
 
-      <Group grow my="xs">
-        <Group position="left">
-          TUBav
-          <Anchor href="https://github.com/ShaigroRB/tubav" target="_blank">
-            <ActionIcon variant="default">
-              <BrandGithub />
-            </ActionIcon>
+      <Group position="apart" my="xs">
+        <Text size="xs">
+          Remake of{' '}
+          <Anchor
+            href="https://www.ediogames.com/fr/users/nubgenerator"
+            target="_blank"
+            size="xs"
+          >
+            The Ultimatest Battle nubgenerator
           </Anchor>
-        </Group>
+        </Text>
 
-        <Box>
-          <Center>
-            <ActionIcon
-              variant="hover"
-              color={dark ? 'yellow' : 'blue'}
-              onClick={() => toggleColorScheme()}
-              title="Toggle color scheme"
-            >
-              {dark ? <Sun /> : <Moon />}
-            </ActionIcon>
-          </Center>
-        </Box>
-
-        <Text sx={{ textAlign: 'end' }}>© 2022 Shaigro</Text>
+        <Text size="xs">© 2023 Shaigro</Text>
       </Group>
     </Box>
   )
