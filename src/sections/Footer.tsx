@@ -9,13 +9,14 @@ export const Footer: React.FC = () => {
     <Box>
       <Divider sx={{ height: 1 }} />
 
-      <Group position="apart" my="xs">
+      <Group position="apart" my="xs" role="contentinfo">
         <Text size="xs">
           Remake of{' '}
           <Anchor
             href="https://www.ediogames.com/fr/users/nubgenerator"
             target="_blank"
             size="xs"
+            role="link"
           >
             The Ultimatest Battle nubgenerator
           </Anchor>

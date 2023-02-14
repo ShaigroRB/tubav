@@ -71,6 +71,12 @@ export const Canvas: React.FC<CanvasProps> = (props) => {
   const canvasRef = useCanvas(layers)
 
   return (
-    <canvas height={HEIGHT_SVG} width={WIDTH_SVG} ref={canvasRef} {...props} />
+    <canvas
+      height={HEIGHT_SVG}
+      width={WIDTH_SVG}
+      ref={canvasRef}
+      aria-label="Avatar generated"
+      {...props}
+    />
   )
 }

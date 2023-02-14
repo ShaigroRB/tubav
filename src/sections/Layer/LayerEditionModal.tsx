@@ -61,8 +61,8 @@ export const LayerEditionModal: React.FC<Props> = ({
   return (
     <Modal opened={opened} onClose={() => close()} title="Edit layer" size="md">
       <Group>
-        <Text>Category:</Text>
         <Select
+          label="Choose the category"
           data={categoriesSelectOptions}
           value={newCategory}
           onChange={handleUpdateCategory}
@@ -72,8 +72,8 @@ export const LayerEditionModal: React.FC<Props> = ({
       </Group>
 
       <Group my="1rem">
-        <Text>Equipment:</Text>
         <Select
+          label="Choose the equipment"
           data={equipmentsSelectOptions(newCategory)}
           value={newEquipmentId.toString()}
           onChange={handleUpdateEquipmentId}

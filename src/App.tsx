@@ -62,12 +62,20 @@ function App() {
             })}
           >
             <Topbar />
-            <Group grow>
-              <Stack justify="center">
+            <Group grow role="main">
+              <Stack
+                justify="center"
+                role="region"
+                aria-label="Generated avatar and button to download it"
+              >
                 <Avatar />
               </Stack>
 
-              <Stack spacing="sm">
+              <Stack
+                spacing="sm"
+                role="region"
+                aria-label="Actions on the different layers of the avatar"
+              >
                 <LayersEditor />
               </Stack>
             </Group>

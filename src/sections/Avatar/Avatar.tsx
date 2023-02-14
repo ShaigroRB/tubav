@@ -1,6 +1,6 @@
-import { ActionIcon, Box, Button, Center, Group, Stack } from '@mantine/core'
+import { Box, Button, Group, Stack } from '@mantine/core'
 import React, { useContext } from 'react'
-import { Download, Repeat } from 'tabler-icons-react'
+import { Download } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { Canvas } from './Canvas'
 

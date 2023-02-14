@@ -28,7 +28,7 @@ import { Layer, LayerCategory } from '../../types'
 import { getThemeColors } from '../../utils/colors'
 import { Equipment, NonEquipment } from '../../utils/equipments'
 import { getEquipmentName } from '../../utils/equipments/utils'
-import { Paper } from '../Paper'
+import { Paper, PaperProps } from '../Paper'
 import { LayerEditionModal } from './LayerEditionModal'
 
 const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
@@ -46,16 +46,17 @@ const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
   )
 }
 
-type LayerItemProps = Layer & {
-  isSelected: boolean
-  nbLayers: number
-  selectLayer: () => void
-  deleteLayer: () => void
-  toggleVisibility: () => void
-  moveLayerDown: () => void
-  moveLayerUp: () => void
-  editLayer: (category: LayerCategory, equipment: number) => void
-}
+type LayerItemProps = Layer &
+  PaperProps & {
+    isSelected: boolean
+    nbLayers: number
+    selectLayer: () => void
+    deleteLayer: () => void
+    toggleVisibility: () => void
+    moveLayerDown: () => void
+    moveLayerUp: () => void
+    editLayer: (category: LayerCategory, equipment: number) => void
+  }
 
 /**
  * Item component for a layer.
@@ -73,6 +74,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
   moveLayerDown,
   moveLayerUp,
   editLayer,
+  ...props
 }) => {
   const [opened, { open: openModal, close: closeModal }] = useDisclosure(false)
 
@@ -94,9 +96,14 @@ const LayerItem: React.FC<LayerItemProps> = ({
           height: '3rem',
           cursor: 'pointer',
         })}
+        {...props}
       >
         <Group>
-          <ThemeIcon color="teal" variant="light">
+          <ThemeIcon
+            color="teal"
+            variant="light"
+            aria-label="Category of the current layer"
+          >
             <CategoryIcon category={category} />
           </ThemeIcon>
           {category !== 'body' && (
@@ -107,6 +114,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
               size={22}
               disabled={depth + 1 === nbLayers - 1}
               onClick={moveLayerUp}
+              title="Move layer up"
             >
               <ArrowUp />
             </ActionIcon>
@@ -114,6 +122,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
               size={22}
               disabled={depth === 0}
               onClick={moveLayerDown}
+              title="Move layer down"
             >
               <ArrowDown />
             </ActionIcon>
@@ -121,10 +130,15 @@ const LayerItem: React.FC<LayerItemProps> = ({
               disabled={category === 'body'}
               size={22}
               onClick={openModal}
+              title="Edit layer"
             >
               <Edit />
             </ActionIcon>
-            <ActionIcon size={22} onClick={toggleVisibility}>
+            <ActionIcon
+              size={22}
+              onClick={toggleVisibility}
+              title={visible ? 'Hide layer' : 'Show layer'}
+            >
               {visible ? <Eye /> : <EyeOff />}
             </ActionIcon>
             <ActionIcon
@@ -135,6 +149,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
                 // no need to select the item
                 event.stopPropagation()
               }}
+              title="Delete layer"
             >
               <Trash />
             </ActionIcon>
@@ -196,6 +211,7 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
 
         return (
           <LayerItem
+            aria-label={`Layer at depth ${layer.depth}`}
             {...layer}
             isSelected={isSelected}
             nbLayers={layers.length}
@@ -222,17 +238,17 @@ const CategoryIcon: React.FC<{ category: Equipment | NonEquipment }> = ({
 }): React.ReactElement | null => {
   switch (category) {
     case 'accessory':
-      return <Sunglasses />
+      return <Sunglasses aria-label="Accessory" />
     case 'grey':
-      return <DotsCircleHorizontal />
+      return <DotsCircleHorizontal aria-label="Miscellaneous" />
     case 'hat':
-      return <BrandRedhat />
+      return <BrandRedhat aria-label="Hat" />
     case 'shield':
-      return <Shield />
+      return <Shield aria-label="Shield" />
     case 'weapon':
-      return <Sword />
+      return <Sword aria-label="Weapon" />
     case 'body':
-      return <Snowman />
+      return <Snowman aria-label="Body of the avatar" />
   }
   return null
 }

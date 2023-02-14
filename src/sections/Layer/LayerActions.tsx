@@ -22,13 +22,19 @@ export const LayerActions: React.FC<PaperProps> = ({ ...props }) => {
   return (
     <Paper {...props}>
       <Stack>
-        <Button variant="outline" rightIcon={<Plus />} onClick={addLayer}>
+        <Button
+          variant="outline"
+          rightIcon={<Plus />}
+          onClick={addLayer}
+          title="Add a new layer on top of the others"
+        >
           Add layer
         </Button>
         <Button
           variant="outline"
           rightIcon={<ArrowsShuffle />}
           onClick={randomizeLayers}
+          title="Shuffle all categories for all layers"
         >
           Random categories
         </Button>
@@ -36,10 +42,16 @@ export const LayerActions: React.FC<PaperProps> = ({ ...props }) => {
           variant="outline"
           rightIcon={<ArrowsShuffle />}
           onClick={randomizeEquipmentIds}
+          title="Shuffle all equipments for all layers"
         >
           Random equipments
         </Button>
-        <Button variant="outline" rightIcon={<Refresh />} onClick={resetLayers}>
+        <Button
+          variant="outline"
+          rightIcon={<Refresh />}
+          onClick={resetLayers}
+          title="Reset the number of layers"
+        >
           Reset layers
         </Button>
       </Stack>

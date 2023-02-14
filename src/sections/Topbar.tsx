@@ -17,12 +17,16 @@ export const Topbar: React.FC = () => {
   const dark = colorScheme === 'dark'
 
   return (
-    <Box>
+    <Box role="banner">
       <Group position="apart">
         <Text size="xl">TUBav</Text>
 
         <Group>
-          <Anchor href="https://github.com/ShaigroRB/tubav" target="_blank">
+          <Anchor
+            href="https://github.com/ShaigroRB/tubav"
+            target="_blank"
+            role="link"
+          >
             <ActionIcon
               variant="hover"
               title="Open GitHub repository in a new tab"
