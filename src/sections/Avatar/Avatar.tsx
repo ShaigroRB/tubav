@@ -2,6 +2,7 @@ import { Box, Button, Group, Stack } from '@mantine/core'
 import React, { useContext } from 'react'
 import { Download } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
+import { useLargeScreen } from '../../useLargeScreen'
 import { Canvas } from './Canvas'
 
 /**
@@ -9,14 +10,19 @@ import { Canvas } from './Canvas'
  */
 export const Avatar = () => {
   const { downloadAvatar } = useContext(TubavContext)
+  const largeScreen = useLargeScreen()
 
   return (
-    <Stack justify="center">
-      <Box style={{ flex: 3, textAlign: 'center' }}>
-        <Canvas id="ub-avatar" />
+    <Stack justify="center" align="center">
+      <Box style={{ flex: 3 }}>
+        {largeScreen ? (
+          <Canvas id="ub-avatar" />
+        ) : (
+          <Canvas id="ub-avatar" zoomScale={0.75} />
+        )}
       </Box>
 
-      <Group sx={{ flex: 1 }} position="center">
+      <Group sx={{ flex: 1 }}>
         <Button onClick={downloadAvatar} rightIcon={<Download />}>
           Download
         </Button>

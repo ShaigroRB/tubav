@@ -59,21 +59,37 @@ const useCanvas = (layers: Layer[]) => {
   return canvasRef
 }
 
+const zoomOut = (canvas: HTMLCanvasElement, zoomScale: number) => {
+  const context = canvas.getContext('2d')
+  context?.scale(zoomScale, zoomScale)
+}
+
 type CanvasProps = {
   id: string
+  zoomScale?: number
 }
 
 /**
  * Canvas used to render the avatar. Its height and width are fixed.
  */
-export const Canvas: React.FC<CanvasProps> = (props) => {
+export const Canvas: React.FC<CanvasProps> = ({ zoomScale = 1, ...props }) => {
   const { layers } = useContext(TubavContext)
   const canvasRef = useCanvas(layers)
 
+  // Zooming out can't properly be done via css
+  // so, I'm doing it via the context of canvas
+  const hasZoomedOut = useRef(false)
+  useEffect(() => {
+    if (!hasZoomedOut.current && canvasRef.current) {
+      zoomOut(canvasRef.current, zoomScale)
+      hasZoomedOut.current = true
+    }
+  }, [canvasRef, hasZoomedOut, zoomScale])
+
   return (
     <canvas
-      height={HEIGHT_SVG}
-      width={WIDTH_SVG}
+      height={HEIGHT_SVG * zoomScale}
+      width={WIDTH_SVG * zoomScale}
       ref={canvasRef}
       aria-label="Avatar generated"
       {...props}
