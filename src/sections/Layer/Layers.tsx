@@ -25,6 +25,7 @@ import {
 } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { Layer, LayerCategory } from '../../types'
+import { useLargeScreen } from '../../useLargeScreen'
 import { getThemeColors } from '../../utils/colors'
 import { Equipment, NonEquipment } from '../../utils/equipments'
 import { getEquipmentName } from '../../utils/equipments/utils'
@@ -32,13 +33,15 @@ import { Paper, PaperProps } from '../Paper'
 import { LayerEditionModal } from './LayerEditionModal'
 
 const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
+  const largeScreen = useLargeScreen()
   return (
     <Text
+      size={largeScreen ? 'md' : 'sm'}
       sx={{
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
-        width: '10rem',
+        width: largeScreen ? '10rem' : '6rem',
       }}
     >
       {text}
@@ -77,6 +80,8 @@ const LayerItem: React.FC<LayerItemProps> = ({
   ...props
 }) => {
   const [opened, { open: openModal, close: closeModal }] = useDisclosure(false)
+  const largeScreen = useLargeScreen()
+  const iconSize = largeScreen ? 22 : 20
 
   return (
     <>
@@ -93,13 +98,14 @@ const LayerItem: React.FC<LayerItemProps> = ({
           ':hover': {
             backgroundColor: getThemeColors(theme, 'gray', 2),
           },
-          height: '3rem',
+          height: largeScreen ? '3rem' : '2.5rem',
           cursor: 'pointer',
         })}
         {...props}
       >
         <Group>
           <ThemeIcon
+            size={iconSize}
             color="teal"
             variant="light"
             aria-label="Category of the current layer"
@@ -111,7 +117,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
           )}
           <Group spacing="xs" sx={{ flexWrap: 'nowrap', marginLeft: 'auto' }}>
             <ActionIcon
-              size={22}
+              size={iconSize}
               disabled={depth + 1 === nbLayers - 1}
               onClick={moveLayerUp}
               title="Move layer up"
@@ -119,7 +125,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
               <ArrowUp />
             </ActionIcon>
             <ActionIcon
-              size={22}
+              size={iconSize}
               disabled={depth === 0}
               onClick={moveLayerDown}
               title="Move layer down"
@@ -128,14 +134,14 @@ const LayerItem: React.FC<LayerItemProps> = ({
             </ActionIcon>
             <ActionIcon
               disabled={category === 'body'}
-              size={22}
+              size={iconSize}
               onClick={openModal}
               title="Edit layer"
             >
               <Edit />
             </ActionIcon>
             <ActionIcon
-              size={22}
+              size={iconSize}
               onClick={toggleVisibility}
               title={visible ? 'Hide layer' : 'Show layer'}
             >
@@ -143,7 +149,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
             </ActionIcon>
             <ActionIcon
               disabled={category === 'body'}
-              size={22}
+              size={iconSize}
               onClick={(event: any) => {
                 deleteLayer()
                 // no need to select the item

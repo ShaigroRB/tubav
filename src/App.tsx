@@ -6,8 +6,15 @@ import {
   Stack,
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { Avatar, Footer, LayersEditor, Topbar } from './sections'
+import {
+  Avatar,
+  Footer,
+  LayersEditor,
+  MobileLayersEditor,
+  Topbar,
+} from './sections'
 import { TubavContextProvider } from './TubavContext'
+import { useLargeScreen } from './useLargeScreen'
 
 /**
  * Hook to get the dark/light mode from local storage.
@@ -40,6 +47,7 @@ function App() {
     setColorScheme(newColorScheme)
     setDarkMode(newColorScheme)
   }
+  const largeScreen = useLargeScreen()
 
   return (
     <ColorSchemeProvider
@@ -62,23 +70,43 @@ function App() {
             })}
           >
             <Topbar />
-            <Group grow role="main">
-              <Stack
-                justify="center"
-                role="region"
-                aria-label="Generated avatar and button to download it"
-              >
-                <Avatar />
-              </Stack>
+            {largeScreen ? (
+              <Group grow role="main">
+                <Stack
+                  justify="center"
+                  role="region"
+                  aria-label="Generated avatar and button to download it"
+                >
+                  <Avatar />
+                </Stack>
 
-              <Stack
-                spacing="sm"
-                role="region"
-                aria-label="Actions on the different layers of the avatar"
-              >
-                <LayersEditor />
+                <Stack
+                  spacing="sm"
+                  role="region"
+                  aria-label="Actions on the different layers of the avatar"
+                >
+                  <LayersEditor />
+                </Stack>
+              </Group>
+            ) : (
+              <Stack role="main">
+                <Stack
+                  justify="center"
+                  role="region"
+                  aria-label="Generated avatar and button to download it"
+                >
+                  <Avatar />
+                </Stack>
+
+                <Stack
+                  spacing="sm"
+                  role="region"
+                  aria-label="Actions on the different layers of the avatar"
+                >
+                  <MobileLayersEditor />
+                </Stack>
               </Stack>
-            </Group>
+            )}
 
             <Footer />
           </Stack>

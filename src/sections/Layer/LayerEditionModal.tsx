@@ -1,7 +1,8 @@
-import { Button, Group, Modal, Text, Select } from '@mantine/core'
+import { Button, Group, Modal, Text, Select, NativeSelect } from '@mantine/core'
 import React, { useContext, useEffect, useState } from 'react'
 import { TubavContext } from '../../TubavContext'
 import { LayerCategory } from '../../types'
+import { useLargeScreen } from '../../useLargeScreen'
 import { Equipment, EQUIPMENT_IDS } from '../../utils/equipments'
 
 type Props = {
@@ -24,6 +25,7 @@ export const LayerEditionModal: React.FC<Props> = ({
 }) => {
   const { categoriesSelectOptions, equipmentsSelectOptions } =
     useContext(TubavContext)
+  const largeScreen = useLargeScreen()
 
   const [newCategory, setNewCategory] = useState(category)
   const [newEquipmentId, setNewEquipmentId] = useState(equipment)
@@ -60,27 +62,44 @@ export const LayerEditionModal: React.FC<Props> = ({
 
   return (
     <Modal opened={opened} onClose={() => close()} title="Edit layer" size="md">
-      <Group>
-        <Select
-          label="Choose the category"
-          data={categoriesSelectOptions}
-          value={newCategory}
-          onChange={handleUpdateCategory}
-          clearable
-          searchable
-        />
-      </Group>
+      {largeScreen ? (
+        <>
+          <Select
+            label="Choose the category"
+            data={categoriesSelectOptions}
+            value={newCategory}
+            onChange={handleUpdateCategory}
+            clearable
+            searchable
+          />
 
-      <Group my="1rem">
-        <Select
-          label="Choose the equipment"
-          data={equipmentsSelectOptions(newCategory)}
-          value={newEquipmentId.toString()}
-          onChange={handleUpdateEquipmentId}
-          clearable
-          searchable
-        />
-      </Group>
+          <Select
+            my="1rem"
+            label="Choose the equipment"
+            data={equipmentsSelectOptions(newCategory)}
+            value={newEquipmentId.toString()}
+            onChange={handleUpdateEquipmentId}
+            clearable
+            searchable
+          />
+        </>
+      ) : (
+        <>
+          <NativeSelect
+            label="Choose the category"
+            data={categoriesSelectOptions}
+            value={newCategory}
+            onChange={(e) => handleUpdateCategory(e.target.value)}
+          />
+          <NativeSelect
+            my="1rem"
+            label="Choose the equipment"
+            data={equipmentsSelectOptions(newCategory)}
+            value={newEquipmentId.toString()}
+            onChange={(e) => handleUpdateEquipmentId(e.target.value)}
+          />
+        </>
+      )}
 
       <Button onClick={handleSaveModal}>Update layer</Button>
     </Modal>
