@@ -75,6 +75,12 @@ export const createEmptyLayer = (depth: number): Layer =>
   createLayer('empty', -1, depth)
 
 /**
+ * Create a body layer.
+ */
+export const createBodyLayer = (depth: number): Layer =>
+  createLayer('body', -1, depth)
+
+/**
  * Default layers.
  */
 export const getDefaultLayers = (): Layer[] => {

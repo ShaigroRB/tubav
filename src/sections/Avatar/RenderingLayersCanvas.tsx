@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
-import { TubavContext } from '../../TubavContext'
+import React, { useEffect, useRef } from 'react'
 import { Layer } from '../../types'
 
 /**
@@ -42,9 +41,11 @@ const WIDTH_SVG = 462
  * Hook that renders layers on a canvas.
  * It returns a ref for that canvas.
  */
-const useCanvas = (layers: Layer[]) => {
+const useCanvas = (
+  layers: Layer[],
+  setAvatarDataURL: (dataUrl: string) => void
+) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { setAvatarDataURL } = useContext(TubavContext)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -66,15 +67,22 @@ const zoomOut = (canvas: HTMLCanvasElement, zoomScale: number) => {
 
 type CanvasProps = {
   id: string
+  'aria-label': string
+  layers: Layer[]
+  setAvatarDataURL: (dataUrl: string) => void
   zoomScale?: number
 }
 
 /**
  * Canvas used to render the avatar. Its height and width are fixed.
  */
-export const Canvas: React.FC<CanvasProps> = ({ zoomScale = 1, ...props }) => {
-  const { layers } = useContext(TubavContext)
-  const canvasRef = useCanvas(layers)
+export const RenderingLayersCanvas: React.FC<CanvasProps> = ({
+  layers,
+  setAvatarDataURL,
+  zoomScale = 1,
+  ...props
+}) => {
+  const canvasRef = useCanvas(layers, setAvatarDataURL)
 
   // Zooming out can't properly be done via css
   // so, I'm doing it via the context of canvas
@@ -91,7 +99,6 @@ export const Canvas: React.FC<CanvasProps> = ({ zoomScale = 1, ...props }) => {
       height={HEIGHT_SVG * zoomScale}
       width={WIDTH_SVG * zoomScale}
       ref={canvasRef}
-      aria-label="Avatar generated"
       {...props}
     />
   )

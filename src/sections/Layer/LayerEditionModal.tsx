@@ -1,9 +1,15 @@
-import { Button, Group, Modal, Text, Select, NativeSelect } from '@mantine/core'
+import { Button, Group, Modal, Select, NativeSelect } from '@mantine/core'
 import React, { useContext, useEffect, useState } from 'react'
 import { TubavContext } from '../../TubavContext'
 import { LayerCategory } from '../../types'
 import { useLargeScreen } from '../../useLargeScreen'
 import { Equipment, EQUIPMENT_IDS } from '../../utils/equipments'
+import {
+  createBodyLayer,
+  createEmptyLayer,
+  createLayer,
+} from '../../utils/layer'
+import { RenderingLayersCanvas } from '../Avatar/RenderingLayersCanvas'
 
 type Props = {
   opened: boolean
@@ -101,7 +107,35 @@ export const LayerEditionModal: React.FC<Props> = ({
         </>
       )}
 
-      <Button onClick={handleSaveModal}>Update layer</Button>
+      <Group>
+        <PreviewModal category={newCategory} equipment={newEquipmentId} />
+        <Button onClick={handleSaveModal} size="lg">
+          Update layer
+        </Button>
+      </Group>
     </Modal>
+  )
+}
+
+type PreviewModalProps = {
+  category: LayerCategory
+  equipment: number
+}
+
+const noop = (_: string) => {}
+const bodyLayer = createBodyLayer(0)
+const emptyLayer = createEmptyLayer(2)
+
+const PreviewModal: React.FC<PreviewModalProps> = ({ category, equipment }) => {
+  const layers = [bodyLayer, createLayer(category, equipment, 1), emptyLayer]
+
+  return (
+    <RenderingLayersCanvas
+      aria-label="Preview of the layer to be edited"
+      layers={layers}
+      setAvatarDataURL={noop}
+      id="preview-modal-canvas"
+      zoomScale={0.42}
+    />
   )
 }
