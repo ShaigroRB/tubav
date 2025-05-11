@@ -7,6 +7,7 @@ export type Layer = {
   equipment_id: number
   depth: number
   visible: boolean
+  frozen: boolean
 }
 
 export type LayerCategory = Equipment | NonEquipment

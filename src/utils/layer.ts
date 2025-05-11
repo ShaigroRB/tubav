@@ -57,6 +57,7 @@ export const createLayer = (
     equipment_id,
     depth,
     visible: true,
+    frozen: false,
   }
 }
 

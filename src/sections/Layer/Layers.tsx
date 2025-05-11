@@ -17,6 +17,8 @@ import {
   Edit,
   Eye,
   EyeOff,
+  Lock,
+  LockOff,
   Shield,
   Snowman,
   Sunglasses,
@@ -56,6 +58,7 @@ type LayerItemProps = Layer &
     selectLayer: () => void
     deleteLayer: () => void
     toggleVisibility: () => void
+    toggleFreeze: () => void
     moveLayerDown: () => void
     moveLayerUp: () => void
     editLayer: (category: LayerCategory, equipment: number) => void
@@ -69,11 +72,13 @@ const LayerItem: React.FC<LayerItemProps> = ({
   equipment_id,
   category,
   visible,
+  frozen,
   isSelected,
   nbLayers,
   selectLayer,
   deleteLayer,
   toggleVisibility,
+  toggleFreeze,
   moveLayerDown,
   moveLayerUp,
   editLayer,
@@ -133,7 +138,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
               <ArrowDown />
             </ActionIcon>
             <ActionIcon
-              disabled={category === 'body'}
+              disabled={category === 'body' || frozen}
               size={iconSize}
               onClick={openModal}
               title="Edit layer"
@@ -149,6 +154,18 @@ const LayerItem: React.FC<LayerItemProps> = ({
             </ActionIcon>
             <ActionIcon
               disabled={category === 'body'}
+              size={iconSize}
+              onClick={toggleFreeze}
+              title={
+                frozen
+                  ? 'Unfreeze layer'
+                  : "Freeze layer (when frozen, a layer can't be modified)"
+              }
+            >
+              {frozen ? <Lock /> : <LockOff />}
+            </ActionIcon>
+            <ActionIcon
+              disabled={category === 'body' || frozen}
               size={iconSize}
               onClick={(event: any) => {
                 deleteLayer()
@@ -231,6 +248,9 @@ export const Layers: React.FC<StackProps> = ({ sx, ...props }) => {
             }}
             toggleVisibility={() =>
               setLayerDetails({ ...layer, visible: !layer.visible })
+            }
+            toggleFreeze={() =>
+              setLayerDetails({ ...layer, frozen: !layer.frozen })
             }
           />
         )

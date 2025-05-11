@@ -147,12 +147,28 @@ export const TubavContextProvider: React.FC<TubavContextProviderProps> = ({
   const randomizeLayers = useCallback(() => {
     // by default, there is a body, a weapon and an empty layers
     const newLayers = getRandomizedLayers(layers.length - 3)
+
+    // do not replace frozen layers
+    layers.forEach((layer, index) => {
+      if (layer.frozen) {
+        newLayers[index] = layer
+      }
+    })
+
     setLayers([...newLayers])
   }, [layers, setLayers])
 
   // randomize equipment ids of layers (same categories)
   const randomizeEquipmentIds = useCallback(() => {
     const newLayers = getRandomizedLayersWithEquipment(layers)
+
+    // do not replace frozen layers
+    layers.forEach((layer, index) => {
+      if (layer.frozen) {
+        newLayers[index] = layer
+      }
+    })
+
     setLayers([...newLayers])
   }, [layers, setLayers])
 
