@@ -1,8 +1,10 @@
-import { Stack, Button } from '@mantine/core'
-import { useContext } from 'react'
+import { Stack, Button, Modal } from '@mantine/core'
+import { useContext, useMemo } from 'react'
 import { Plus, ArrowsShuffle, Refresh } from 'tabler-icons-react'
 import { TubavContext } from '../../TubavContext'
 import { PaperProps, Paper } from '../Paper'
+import { useDisclosure } from '@mantine/hooks'
+import { getEquipmentName } from '../../utils/equipments'
 
 /**
  * Displays all actions that can be performed for layers:
@@ -16,45 +18,84 @@ import { PaperProps, Paper } from '../Paper'
  *   4. random weapon
  */
 export const LayerActions: React.FC<PaperProps> = ({ ...props }) => {
-  const { randomizeLayers, randomizeEquipmentIds, resetLayers, addLayer } =
-    useContext(TubavContext)
+  const {
+    randomizeLayers,
+    randomizeEquipmentIds,
+    resetLayers,
+    addLayer,
+    layers,
+  } = useContext(TubavContext)
+
+  const hasFrozen = useMemo(
+    () => layers.findIndex((l) => l.frozen) !== -1,
+    [layers]
+  )
+
+  const [opened, { open, close }] = useDisclosure(false)
+  const confirmReset = () => {
+    resetLayers()
+    close()
+  }
 
   return (
-    <Paper {...props}>
-      <Stack>
-        <Button
-          variant="outline"
-          rightIcon={<Plus />}
-          onClick={addLayer}
-          title="Add a new layer on top of the others"
-        >
-          Add layer
+    <>
+      <Paper {...props}>
+        <Stack>
+          <Button
+            variant="outline"
+            rightIcon={<Plus />}
+            onClick={addLayer}
+            title="Add a new layer on top of the others"
+          >
+            Add layer
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<ArrowsShuffle />}
+            onClick={randomizeLayers}
+            title="Shuffle all categories for all layers"
+          >
+            Random categories
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<ArrowsShuffle />}
+            onClick={randomizeEquipmentIds}
+            title="Shuffle all equipments for all layers"
+          >
+            Random equipments
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<Refresh />}
+            onClick={hasFrozen ? open : resetLayers}
+            title="Reset the number of layers"
+          >
+            Reset layers
+          </Button>
+        </Stack>
+      </Paper>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Confirm reset of frozen layers"
+        size="md"
+      >
+        Frozen layers are also reset.
+        <br />
+        List of frozen layers:
+        <ul>
+          {layers
+            .filter((layer) => layer.frozen)
+            .map((l) => (
+              <li key={l.depth}>{getEquipmentName(l.equipment_id)}</li>
+            ))}
+        </ul>
+        <Button onClick={confirmReset} size="lg">
+          Reset all layers
         </Button>
-        <Button
-          variant="outline"
-          rightIcon={<ArrowsShuffle />}
-          onClick={randomizeLayers}
-          title="Shuffle all categories for all layers"
-        >
-          Random categories
-        </Button>
-        <Button
-          variant="outline"
-          rightIcon={<ArrowsShuffle />}
-          onClick={randomizeEquipmentIds}
-          title="Shuffle all equipments for all layers"
-        >
-          Random equipments
-        </Button>
-        <Button
-          variant="outline"
-          rightIcon={<Refresh />}
-          onClick={resetLayers}
-          title="Reset the number of layers"
-        >
-          Reset layers
-        </Button>
-      </Stack>
-    </Paper>
+      </Modal>
+    </>
   )
 }
