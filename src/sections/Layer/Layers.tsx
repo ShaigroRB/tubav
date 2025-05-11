@@ -109,6 +109,18 @@ const LayerItem: React.FC<LayerItemProps> = ({
         {...props}
       >
         <Group>
+          <ActionIcon
+            disabled={category === 'body'}
+            size={iconSize}
+            onClick={toggleFreeze}
+            title={
+              frozen
+                ? 'Unfreeze layer'
+                : "Freeze layer (when frozen, a layer can't be modified)"
+            }
+          >
+            {frozen || category === 'body' ? <Lock /> : <LockOff />}
+          </ActionIcon>
           <ThemeIcon
             size={iconSize}
             color="teal"
@@ -138,14 +150,6 @@ const LayerItem: React.FC<LayerItemProps> = ({
               <ArrowDown />
             </ActionIcon>
             <ActionIcon
-              disabled={category === 'body' || frozen}
-              size={iconSize}
-              onClick={openModal}
-              title="Edit layer"
-            >
-              <Edit />
-            </ActionIcon>
-            <ActionIcon
               size={iconSize}
               onClick={toggleVisibility}
               title={visible ? 'Hide layer' : 'Show layer'}
@@ -153,16 +157,12 @@ const LayerItem: React.FC<LayerItemProps> = ({
               {visible ? <Eye /> : <EyeOff />}
             </ActionIcon>
             <ActionIcon
-              disabled={category === 'body'}
+              disabled={category === 'body' || frozen}
               size={iconSize}
-              onClick={toggleFreeze}
-              title={
-                frozen
-                  ? 'Unfreeze layer'
-                  : "Freeze layer (when frozen, a layer can't be modified)"
-              }
+              onClick={openModal}
+              title="Edit layer"
             >
-              {frozen ? <Lock /> : <LockOff />}
+              <Edit />
             </ActionIcon>
             <ActionIcon
               disabled={category === 'body' || frozen}
