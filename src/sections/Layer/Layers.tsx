@@ -165,6 +165,7 @@ const LayerItem: React.FC<LayerItemProps> = ({
               <Edit />
             </ActionIcon>
             <ActionIcon
+              ml={12}
               disabled={category === 'body' || frozen}
               size={iconSize}
               onClick={(event: any) => {
